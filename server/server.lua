@@ -21,9 +21,6 @@ end
 RegisterNetEvent("mnr_fuel:server:ElaborateAction", function(data)
 	if not source then return end
 
-	local playerState = Player(source).state
-	if not playerState.inGasStation then return end
-
 	local price = data.PT == "fuel" and math.ceil(data.Amount * GlobalState.fuelPrice) or Config.JerrycanPrice
 	local playerMoney = server.GetPlayerMoney(source, data.PM)
 	if playerMoney < price then return server.Notify(source, locale("notify.not-enough-money"), "error") end

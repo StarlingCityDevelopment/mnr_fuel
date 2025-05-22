@@ -2,7 +2,6 @@ function InitFuelStates()
     local playerState = LocalPlayer.state
     playerState:set("holding", "null", true)
     playerState:set("refueling", false, true)
-    playerState:set("inGasStation", false, true)
 end
 
 function CheckFuelState(action)
@@ -17,8 +16,6 @@ function CheckFuelState(action)
     if action == "refuel_jerrycan" then
         return holding == "jerrycan" and not refueling
     end
-
-    if not playerState.inGasStation then return false end
 
     if action == "refuel_nozzle" or action == "return_nozzle" then
         return (holding == "fv_nozzle" or holding == "ev_nozzle") and not refueling
