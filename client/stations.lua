@@ -11,16 +11,15 @@ local function InitTargets()
 	end
 end
 
-local function CreateStationZone(stationName, stationData)
-	Stations.Zones[stationName] = lib.zones.box({
-		coords = vec3(stationData.coords.x, stationData.coords.y, stationData.coords.z),
-		size = stationData.size,
-		rotation = stationData.coords.w,
+local function CreateStationZone(name, stationData)
+	Stations.Zones[name] = lib.zones.sphere({
+		coords = stationData.coords,
+		radius = stationData.radius,
 		onEnter = function(self)
-			SetFuelState("inGasStation", true)
+			TriggerServerEvent("mnr_fuel:server:EnterStation", name)
 		end,
 		onExit = function(self)
-			SetFuelState("inGasStation", false)
+			TriggerServerEvent("mnr_fuel:server:ExitStation")
 		end,
 		debug = stationData.debug,
 	})
@@ -31,9 +30,9 @@ local function CreateStationBlip(coords, id, ev)
 end
 
 function InitGasStations()
-	for stationName, stationData in pairs(Config.GasStations) do
-		CreateStationZone(stationName, stationData)
-		CreateStationBlip(stationData.coords, stationName, stationData.type == "ev")
+	for name, stationData in pairs(Config.GasStations) do
+		CreateStationZone(name, stationData)
+		CreateStationBlip(stationData.coords, name, stationData.type == "ev")
 	end
 	InitTargets()
 end

@@ -1,7 +1,7 @@
 local Config = lib.load("config.config")
 local InStation = {}
 
-lib.callback.register("mnr_fuel:server:EnterStation", function(source, name)
+RegisterNetEvent("mnr_fuel:server:EnterStation", function(name)
     local station = Config.GasStations[name]
 
     if not source or not station then return end
@@ -14,4 +14,16 @@ lib.callback.register("mnr_fuel:server:EnterStation", function(source, name)
     if #(playerCoords - stationCoords) > stationRadius then return end
 
     InStation[source] = name
+end)
+
+RegisterNetEvent("mnr_fuel:server:ExitStation", function()
+    if not source then return end
+
+    InStation[source] = nil
+end)
+
+lib.callback.register("mnr_fuel:server:InStation", function(name)
+    if not source then return end
+    
+    return InStation[source] == name
 end)
