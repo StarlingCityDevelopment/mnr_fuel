@@ -25,8 +25,8 @@ local function CreateStationZone(name, stationData)
 	})
 end
 
-local function CreateStationBlip(coords, id, ev)
-	Stations.Blips[id] = utils.CreateBlip(coords, ev)
+local function CreateStationBlip(coords, name, ev)
+	Stations.Blips[name] = utils.CreateBlip(coords, ev)
 end
 
 function InitGasStations()
