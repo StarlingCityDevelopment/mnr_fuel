@@ -67,6 +67,7 @@ RegisterNetEvent("mnr_fuel:server:ElaborateAction", function(purchase, method, t
 		TriggerClientEvent("mnr_fuel:client:PlayRefuelAnim", source, {netId = netId, Amount = fuelAmount}, true)
 	elseif purchase == "jerrycan" then
 		local playerState = Player(source).state
+		
 		if playerState.holding == "jerrycan" then
 			local item, durability = inventory.GetJerrycan(source)
 			if not item or item.name ~= "WEAPON_PETROLCAN" then return end
