@@ -206,13 +206,6 @@ local function SecondaryMenu(purchase, vehicle, amount)
 				icon = "building-columns",
 				onSelect = function()
 					TriggerServerEvent("mnr_fuel:server:ElaborateAction", purchase, "bank", totalCost, amount, vehNetID)
-					{
-						netId = vehNetID or false,
-						method = "bank",
-						PT = purchase,
-						Amount = amount,
-						Cost = totalCost,
-					})
 				end,
 			},
 			{
@@ -220,13 +213,7 @@ local function SecondaryMenu(purchase, vehicle, amount)
 				description = locale("menu.payment-cash-desc"):format(cashMoney),
 				icon = "money-bill",
 				onSelect = function()
-					TriggerServerEvent("mnr_fuel:server:ElaborateAction", purchase, "cash", totalCost, amount, vehNetID){
-						NetID = vehNetID or false,
-						PM = "cash",
-						PT = purchase,
-						Amount = amount,
-						Cost = totalCost,
-					})
+					TriggerServerEvent("mnr_fuel:server:ElaborateAction", purchase, "cash", totalCost, amount, vehNetID)
 				end,
 			},
 		},
