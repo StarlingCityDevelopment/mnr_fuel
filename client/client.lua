@@ -1,4 +1,3 @@
----@diagnostic disable: lowercase-global
 local Config = lib.load("config.config")
 local utils = lib.load("client.utils")
 
@@ -157,7 +156,6 @@ end
 RegisterNetEvent("mnr_fuel:client:RefuelVehicle", function(data)
 	if not data.entity or not CheckFuelState("refuel_nozzle") then return end
 
-	---@description Electric Vehicle Check (Thanks to James [jgscripts] for a comment in a FiveM post)
 	local playerState = LocalPlayer.state
 	local isElectric = GetIsVehicleElectric(GetEntityModel(data.entity))
 	if playerState.holding == "ev_nozzle" and not isElectric then return client.Notify(locale("notify.not-ev"), "error") end
