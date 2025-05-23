@@ -5,11 +5,7 @@ GlobalState:set("fuelPrice", Config.FuelPrice, true)
 
 ---@description Callbacks
 local function inStation(source)
-	if not InStation[source] then
-		return false
-	else
-		return true
-	end
+	return InStation[source] ~= nil
 end
 
 lib.callback.register("mnr_fuel:server:InStation", inStation)
@@ -24,7 +20,7 @@ end)
 RegisterNetEvent("mnr_fuel:server:EnterStation", function(name)
     local station = Config.GasStations[name]
 
-    if not source or not station then return end
+    if not station then return end
     
     local stationCoords = station.coords
     local stationRadius = station.radius
@@ -37,8 +33,6 @@ RegisterNetEvent("mnr_fuel:server:EnterStation", function(name)
 end)
 
 RegisterNetEvent("mnr_fuel:server:ExitStation", function()
-    if not source then return end
-
     InStation[source] = nil
 end)
 
@@ -49,13 +43,12 @@ local function setFuel(netID, fuelAmount)
 	local vehicleState = Entity(vehicle)?.state
 	local fuelLevel = vehicleState.fuel
 
-	local fuel = fuelLevel + fuelAmount
+	local fuel = math.min(fuelLevel + fuelAmount, 100)
 
 	vehicleState:set("fuel", fuel, true)
 end
 
 RegisterNetEvent("mnr_fuel:server:ElaborateAction", function(purchase, method, total, amount, netId)
-	if not source then return end
 	if not inStation(source) then return end
 
 	local price = purchase == "fuel" and math.ceil(amount * GlobalState.fuelPrice) or Config.JerrycanPrice
@@ -73,6 +66,7 @@ RegisterNetEvent("mnr_fuel:server:ElaborateAction", function(purchase, method, t
 
 		TriggerClientEvent("mnr_fuel:client:PlayRefuelAnim", source, {netId = netId, Amount = fuelAmount}, true)
 	elseif purchase == "jerrycan" then
+		local playerState = Player(source).state
 		if playerState.holding == "jerrycan" then
 			local item, durability = inventory.GetJerrycan(source)
 			if not item or item.name ~= "WEAPON_PETROLCAN" then return end
@@ -96,7 +90,7 @@ RegisterNetEvent("mnr_fuel:server:ElaborateAction", function(purchase, method, t
 end)
 
 RegisterNetEvent("mnr_fuel:server:RefuelVehicle", function(data)
-	if not source or not data.entity then return end
+	if not data.entity then return end
 	local playerState = Player(source).state
 	if playerState.holding ~= "jerrycan" then return end
 
