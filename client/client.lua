@@ -191,9 +191,9 @@ RegisterNetEvent("mnr_fuel:client:ReturnNozzle", function(data, pumpType)
 	DeleteRope(FuelEntities.rope)
 end)
 
-local function SecondaryMenu(data)
-	local totalCost = (data.PT == "fuel") and math.ceil(data.fuelAmount * GlobalState.fuelPrice) or Config.JerrycanPrice
-	local vehNetID = (data.PT == "fuel") and NetworkGetEntityIsNetworked(data.Veh) and VehToNet(data.Veh)
+local function SecondaryMenu(purchase, vehicle, amount)
+	local totalCost = (purchase == "fuel") and math.ceil(amount * GlobalState.fuelPrice) or Config.JerrycanPrice
+	local vehNetID = (purchase == "fuel") and NetworkGetEntityIsNetworked(vehicle) and VehToNet(vehicle)
 	local cashMoney, bankMoney = lib.callback.await("mnr_fuel:server:GetPlayerMoney", false)
 
 	lib.registerContext({
@@ -205,11 +205,12 @@ local function SecondaryMenu(data)
 				description = locale("menu.payment-bank-desc"):format(bankMoney),
 				icon = "building-columns",
 				onSelect = function()
-					TriggerServerEvent("mnr_fuel:server:ElaborateAction", {
-						NetID = vehNetID or false,
-						PM = "bank",
-						PT = data.PT,
-						Amount = data.fuelAmount,
+					TriggerServerEvent("mnr_fuel:server:ElaborateAction", purchase, "bank", totalCost, amount, vehNetID)
+					{
+						netId = vehNetID or false,
+						method = "bank",
+						PT = purchase,
+						Amount = amount,
 						Cost = totalCost,
 					})
 				end,
@@ -219,11 +220,11 @@ local function SecondaryMenu(data)
 				description = locale("menu.payment-cash-desc"):format(cashMoney),
 				icon = "money-bill",
 				onSelect = function()
-					TriggerServerEvent("mnr_fuel:server:ElaborateAction", {
+					TriggerServerEvent("mnr_fuel:server:ElaborateAction", purchase, "cash", totalCost, amount, vehNetID){
 						NetID = vehNetID or false,
 						PM = "cash",
-						PT = data.PT,
-						Amount = data.fuelAmount,
+						PT = purchase,
+						Amount = amount,
 						Cost = totalCost,
 					})
 				end,
@@ -275,13 +276,13 @@ RegisterNetEvent("mnr_fuel:client:RefuelVehicle", function(data)
 	local fuelAmount = inputFuel - currentFuel
 	if not fuelAmount then return end
 
-	SecondaryMenu({Veh = data.entity, PT = "fuel", fuelAmount = fuelAmount})
+	SecondaryMenu("fuel", data.entity, fuelAmount)
 end)
 
 RegisterNetEvent("mnr_fuel:client:BuyJerrycan", function(data)
 	if not data.entity or not CheckFuelState("buy_jerrycan") then return end
 
-	SecondaryMenu({PT = "jerrycan"})
+	SecondaryMenu("jerrycan")
 end)
 
 RegisterNetEvent("mnr_fuel:client:PlayRefuelAnim", function(data, isPump)
@@ -289,7 +290,7 @@ RegisterNetEvent("mnr_fuel:client:PlayRefuelAnim", function(data, isPump)
 	if isPump and not (playerState.holding == "fv_nozzle" or playerState.holding == "ev_nozzle") then return end
 	if not isPump and not playerState.holding == "jerrycan" then return end
 
-	local vehicle = NetToVeh(data.NetID)
+	local vehicle = NetToVeh(data.netId)
 	local playerPed = cache.ped or PlayerPedId()
 
 	TaskTurnPedToFaceEntity(playerPed, vehicle, 500)
