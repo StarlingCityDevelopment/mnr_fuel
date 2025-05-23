@@ -73,7 +73,46 @@ AddEventHandler("onResourceStop", function(resourceName)
 	RemoveStationBlips()
 end)
 
----@description Events
+---@description Dynamic Features
+local function setPlayerState(key, value)
+    local playerState = LocalPlayer.state
+    playerState:set(key, value, true)
+end
+
+lib.onCache("weapon", function(weapon)
+    local playerState = LocalPlayer.state
+    if weapon ~= `WEAPON_PETROLCAN` and playerState.holding ~= "null" then
+        setPlayerState("holding", "null")
+    elseif weapon == `WEAPON_PETROLCAN` then
+        setPlayerState("holding", "jerrycan")
+    end
+end)
+
+---@description Check for Target and Events
+function CheckFuelState(action)
+    local playerPed = cache.ped or PlayerPedId()
+
+    if IsPedInAnyVehicle(playerPed, true) then return false end
+
+    local playerState = LocalPlayer.state
+    local holding = playerState.holding
+    local refueling = playerState.refueling
+
+    if action == "refuel_jerrycan" then
+        return holding == "jerrycan" and not refueling
+    end
+
+    if action == "refuel_nozzle" or action == "return_nozzle" then
+        return (holding == "fv_nozzle" or holding == "ev_nozzle") and not refueling
+    elseif action == "take_nozzle" then
+        return holding == "null" and not refueling
+    elseif action == "buy_jerrycan" then
+        return (holding ~= "fv_nozzle" and holding ~= "ev_nozzle") and not refueling
+    end
+
+    return false
+end
+
 RegisterNetEvent("mnr_fuel:client:TakeNozzle", function(data, pumpType)
 	if not data.entity or not CheckFuelState("take_nozzle") then return end
 
@@ -116,7 +155,7 @@ RegisterNetEvent("mnr_fuel:client:TakeNozzle", function(data, pumpType)
 	local newPumpCoords = pumpCoords + rotatedPumpOffset
 	AttachEntitiesToRope(FuelEntities.rope, data.entity, FuelEntities.nozzle, newPumpCoords.x, newPumpCoords.y, newPumpCoords.z, nozzlePos.x, nozzlePos.y, nozzlePos.z, length, false, false, nil, nil)
 
-	SetFuelState("holding", ("%s_nozzle"):format(pumpType))
+	setPlayerState("holding", ("%s_nozzle"):format(pumpType))
 	CreateThread(function()
 		local playerState = LocalPlayer.state
 		local nozzleName = ("%s_nozzle"):format(pumpType)
@@ -128,7 +167,7 @@ RegisterNetEvent("mnr_fuel:client:TakeNozzle", function(data, pumpType)
 			if dist > 7.5 then
 				if TargetCreated then if Config.FuelTargetExport then exports["ox_target"]:AllowRefuel(false) end end
 				TargetCreated = true
-				SetFuelState("holding", "null")
+				setPlayerState("holding", "null")
 				DeleteObject(FuelEntities.nozzle)
 				RopeUnloadTextures()
 				DeleteRope(FuelEntities.rope)
@@ -143,7 +182,7 @@ RegisterNetEvent("mnr_fuel:client:ReturnNozzle", function(data, pumpType)
 	if utils.LoadAudioBank() then
 		PlaySoundFromEntity(-1, ("mnr_return_%s_nozzle"):format(pumpType), data.entity, "mnr_fuel", true, 0)
 	end
-	SetFuelState("holding", "null")
+	setPlayerState("holding", "null")
 	TargetCreated = false
 	Wait(250)
 	if Config.FuelTargetExport then exports["ox_target"]:AllowRefuel(false) end
@@ -257,7 +296,7 @@ RegisterNetEvent("mnr_fuel:client:PlayRefuelAnim", function(data, isPump)
 	Wait(500)
 
 	local refuelTime = data.Amount * 2000
-	SetFuelState("refueling", true)
+	setPlayerState("refueling", true)
 	local pumpType = playerState.holding == "fv_nozzle" and "fv" or playerState.holding == "ev_nozzle" and "ev"
 	local soundId = GetSoundId()
 	if utils.LoadAudioBank() then
@@ -278,7 +317,7 @@ RegisterNetEvent("mnr_fuel:client:PlayRefuelAnim", function(data, isPump)
 		StopSound(soundId)
 		ReleaseSoundId(soundId)
 		PlaySoundFromEntity(-1, ("mnr_%s_stop"):format(pumpType), FuelEntities.nozzle, "mnr_fuel", true, 0)
-		SetFuelState("refueling", false)
+		setPlayerState("refueling", false)
 		client.Notify(locale("notify.refuel-success"), "success")
 	end
 end)
