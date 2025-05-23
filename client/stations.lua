@@ -6,22 +6,22 @@ Stations = {Blips = {}, Zones = {}}
 local function InitTargets()
 	target.AddGlobalVehicle()
 
-	for pumpModel, pumpData in pairs(Config.Pumps) do
-		target.AddModel(pumpModel, pumpData.type == "ev")
+	for model, data in pairs(Config.Pumps) do
+		target.AddModel(model, data.type == "ev")
 	end
 end
 
-local function CreateStationZone(name, stationData)
+local function CreateStationZone(name, data)
 	Stations.Zones[name] = lib.zones.sphere({
-		coords = stationData.coords,
-		radius = stationData.radius,
+		coords = data.coords,
+		radius = data.radius,
 		onEnter = function(self)
 			TriggerServerEvent("mnr_fuel:server:EnterStation", name)
 		end,
 		onExit = function(self)
 			TriggerServerEvent("mnr_fuel:server:ExitStation")
 		end,
-		debug = stationData.debug,
+		debug = data.debug,
 	})
 end
 
@@ -30,9 +30,9 @@ local function CreateStationBlip(coords, name, ev)
 end
 
 function InitGasStations()
-	for name, stationData in pairs(Config.GasStations) do
-		CreateStationZone(name, stationData)
-		CreateStationBlip(stationData.coords, name, stationData.type == "ev")
+	for name, data in pairs(Config.GasStations) do
+		CreateStationZone(name, data)
+		CreateStationBlip(data.coords, name, data.type == "ev")
 	end
 	InitTargets()
 end
