@@ -1,9 +1,3 @@
-function InitFuelStates()
-    local playerState = LocalPlayer.state
-    playerState:set("holding", "null", true)
-    playerState:set("refueling", false, true)
-end
-
 function CheckFuelState(action)
     local playerPed = cache.ped or PlayerPedId()
 

@@ -1,16 +1,79 @@
 local Config = lib.load("config.config")
 local utils = lib.load("client.utils")
 
+local Stations = {Blips = {}, Zones = {}}
 local FuelEntities = {nozzle = nil, rope = nil}
 
-main = {}
+---@description Init Functions
+local function InitTargets()
+	target.AddGlobalVehicle()
 
-function main.SecureEntityDeletion()
+	for model, data in pairs(Config.Pumps) do
+		target.AddModel(model, data.type == "ev")
+	end
+end
+
+local function CreateStationZone(name, data)
+	Stations.Zones[name] = lib.zones.sphere({
+		coords = data.coords,
+		radius = data.radius,
+		onEnter = function(self)
+			TriggerServerEvent("mnr_fuel:server:EnterStation", name)
+		end,
+		onExit = function(self)
+			TriggerServerEvent("mnr_fuel:server:ExitStation")
+		end,
+		debug = data.debug,
+	})
+end
+
+local function CreateStationBlip(coords, name, ev)
+	Stations.Blips[name] = utils.CreateBlip(coords, ev)
+end
+
+local function InitFuelStates()
+    local playerState = LocalPlayer.state
+    playerState:set("holding", "null", true)
+    playerState:set("refueling", false, true)
+end
+
+local function InitGasStations()
+	for name, data in pairs(Config.GasStations) do
+		CreateStationZone(name, data)
+		CreateStationBlip(data.coords, name, data.type == "ev")
+	end
+	InitTargets()
+end
+
+AddEventHandler("onClientResourceStart", function(resourceName)
+    local scriptName = cache.resource or GetCurrentResourceName()
+    if resourceName ~= scriptName then return end
+    InitFuelStates()
+    InitGasStations()
+end)
+
+---@description Stop Unload
+local function SecureEntityDeletion()
     DeleteObject(FuelEntities.nozzle)
     RopeUnloadTextures()
     DeleteObject(FuelEntities.rope)
 end
 
+local function RemoveStationBlips()
+	for _, blip in pairs(Stations.Blips) do
+		RemoveBlip(blip)
+	end
+end
+
+AddEventHandler("onResourceStop", function(resourceName)
+	local scriptName = cache.resource or GetCurrentResourceName()
+	if resourceName ~= scriptName then return end
+	SecureEntityDeletion()
+	target.RemoveGlobalVehicle()
+	RemoveStationBlips()
+end)
+
+---@description Events
 RegisterNetEvent("mnr_fuel:client:TakeNozzle", function(data, pumpType)
 	if not data.entity or not CheckFuelState("take_nozzle") then return end
 
