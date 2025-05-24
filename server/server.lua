@@ -48,6 +48,38 @@ local function setFuel(netID, fuelAmount)
 	vehicleState:set("fuel", fuel, true)
 end
 
+local function refillJerrycan(source, method, price)
+    local item, durability = inventory.GetJerrycan(source)
+    if not item or item.name ~= "WEAPON_PETROLCAN" then return end
+
+    if durability > 0 then
+        return server.Notify(source, locale("notify.jerrycan-not-empty"), "error")
+    end
+
+    if not server.PayMoney(source, method, price) then return end
+
+    inventory.UpdateJerrycan(source, item, 100)
+end
+
+local function buyJerrycan(source, method, price)
+    if not inventory.CanCarry(source, "WEAPON_PETROLCAN") then
+        return server.Notify(source, locale("notify.not-enough-space"), "error")
+    end
+
+    if not server.PayMoney(source, method, price) then return end
+
+    inventory.AddItem(source, "WEAPON_PETROLCAN", 1)
+end
+
+local function jerrycanPurchase(source, method, price)
+    local playerState = Player(source).state
+    if playerState.holding == "jerrycan" then
+        return refillJerrycan(source, method, price)
+    else
+        return buyJerrycan(source, method, price)
+    end
+end
+
 RegisterNetEvent("mnr_fuel:server:ElaborateAction", function(purchase, method, total, amount, netId)
 	if not inStation(source) then return end
 
@@ -66,27 +98,7 @@ RegisterNetEvent("mnr_fuel:server:ElaborateAction", function(purchase, method, t
 
 		TriggerClientEvent("mnr_fuel:client:PlayRefuelAnim", source, {netId = netId, Amount = fuelAmount}, true)
 	elseif purchase == "jerrycan" then
-		local playerState = Player(source).state
-		
-		if playerState.holding == "jerrycan" then
-			local item, durability = inventory.GetJerrycan(source)
-			if not item or item.name ~= "WEAPON_PETROLCAN" then return end
-			
-			if durability > 0 then
-				return server.Notify(source, locale("notify.jerrycan-not-empty"), "error")
-			end
-
-			if not server.PayMoney(source, method, price) then return end
-			inventory.UpdateJerrycan(source, item, 100)
-		else
-			if not inventory.CanCarry(source, "WEAPON_PETROLCAN") then
-				return server.Notify(source, locale("notify.not-enough-space"), "error")
-			end
-
-			if not server.PayMoney(source, method, price) then return end
-
-			inventory.AddItem(source, "WEAPON_PETROLCAN", 1)
-		end
+		jerrycanPurchase(source, method, price)
 	end
 end)
 
