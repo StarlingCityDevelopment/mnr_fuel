@@ -1,4 +1,5 @@
 local Config = lib.load("config.config")
+local stationsData = lib.load("config.stations")
 local utils = lib.load("client.utils")
 
 local Stations = {Blips = {}, Zones = {}}
@@ -38,7 +39,7 @@ local function InitFuelStates()
 end
 
 local function InitGasStations()
-	for name, data in pairs(Config.GasStations) do
+	for name, data in pairs(stationsData) do
 		CreateStationZone(name, data)
 		CreateStationBlip(data.coords, name, data.type == "ev")
 	end
