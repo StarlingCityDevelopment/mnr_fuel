@@ -5,16 +5,8 @@ local utils = lib.load("client.utils")
 local Stations = {Blips = {}, Zones = {}}
 local FuelEntities = {nozzle = nil, rope = nil}
 
----@description Init Functions
-local function InitTargets()
-	target.AddGlobalVehicle()
-
-	for model, data in pairs(Config.Pumps) do
-		target.AddModel(model, data.type == "ev")
-	end
-end
-
-local function CreateStationZone(name, data)
+---@description Script Start & Stop
+local function CreateStation(name, data)
 	Stations.Zones[name] = lib.zones.sphere({
 		coords = data.coords,
 		radius = data.radius,
@@ -26,52 +18,47 @@ local function CreateStationZone(name, data)
 		end,
 		debug = data.debug,
 	})
-end
 
-local function CreateStationBlip(coords, name, ev)
-	Stations.Blips[name] = utils.CreateBlip(coords, ev)
-end
-
-local function InitFuelStates()
-    local playerState = LocalPlayer.state
-    playerState:set("holding", "null", true)
-    playerState:set("refueling", false, true)
-end
-
-local function InitGasStations()
-	for name, data in pairs(stationsData) do
-		CreateStationZone(name, data)
-		CreateStationBlip(data.coords, name, data.type == "ev")
-	end
-	InitTargets()
+	Stations.Blips[name] = utils.CreateBlip(data.coords, data.type == "ev")
 end
 
 AddEventHandler("onClientResourceStart", function(resourceName)
     local scriptName = cache.resource or GetCurrentResourceName()
     if resourceName ~= scriptName then return end
-    InitFuelStates()
-    InitGasStations()
-end)
 
----@description Stop Unload
-local function SecureEntityDeletion()
-    DeleteObject(FuelEntities.nozzle)
-    RopeUnloadTextures()
-    DeleteObject(FuelEntities.rope)
-end
+	-- Init Player States
+	local playerState = LocalPlayer.state
+	playerState:set("holding", "null", true)
+	playerState:set("refueling", false, true)
 
-local function RemoveStationBlips()
-	for _, blip in pairs(Stations.Blips) do
-		RemoveBlip(blip)
+	-- Init Station Zones & Blips
+	for name, data in pairs(stationsData) do
+		CreateStation(name, data)
 	end
-end
+
+	-- Init Targets
+	target.AddGlobalVehicle()
+	for model, data in pairs(Config.Pumps) do
+		target.AddModel(model, data.type == "ev")
+	end
+end)
 
 AddEventHandler("onResourceStop", function(resourceName)
 	local scriptName = cache.resource or GetCurrentResourceName()
 	if resourceName ~= scriptName then return end
-	SecureEntityDeletion()
+
+	-- Deletes entities and unloads textures
+	DeleteObject(FuelEntities.nozzle)
+	RopeUnloadTextures()
+	DeleteObject(FuelEntities.rope)
+
+	-- Removes targets
 	target.RemoveGlobalVehicle()
-	RemoveStationBlips()
+
+	-- Removes blips
+	for _, blip in pairs(Stations.Blips) do
+		RemoveBlip(blip)
+	end
 end)
 
 ---@description Dynamic Features
