@@ -24,7 +24,6 @@
         "payment-bank-desc": "You have %s$ in your bank account.",
         "payment-cash": "Cash",
         "payment-cash-desc": "You have %s$ in cash."
-
     },
     "progress": {
         "refueling-vehicle": "Refueling Vehicle..."
