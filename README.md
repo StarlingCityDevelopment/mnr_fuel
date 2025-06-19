@@ -7,4 +7,4 @@ Script born from the fusion of the feature-rich script [cdn-fuel](https://github
 - jgscripts for informations about ev found on a cfx post
 
 ## Links
-- [Discord](https://discord.gg/RxpNTx2YKZ)
+- [Discord](https://discord.gg/WKtk65yBC6)
