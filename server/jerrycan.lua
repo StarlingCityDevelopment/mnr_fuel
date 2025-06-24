@@ -26,9 +26,9 @@ end
 function jerrycan.purchase(source, method, price)
     local playerState = Player(source).state
     if playerState.holding == "jerrycan" then
-        return refillJerrycan(source, method, price)
+        return jerrycan.refill(source, method, price)
     else
-        return buyJerrycan(source, method, price)
+        return jerrycan.buy(source, method, price)
     end
 end
 

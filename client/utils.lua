@@ -13,7 +13,7 @@ function utils.CheckFuelState(action)
     end
 
     local holding = playerState.holding
-    
+
     if action == "take_nozzle" then
         return holding == "null"
     elseif action == "refuel_jerrycan" then

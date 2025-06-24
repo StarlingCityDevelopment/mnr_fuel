@@ -12,7 +12,7 @@ ox_lib "locale"
 
 shared_scripts {
     "@ox_lib/init.lua",
-    "config/config.lua",
+    "config/*.lua",
 }
 
 client_scripts {
