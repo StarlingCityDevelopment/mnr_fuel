@@ -4,23 +4,24 @@ local utils = {}
 
 function utils.CheckFuelState(action)
     local playerPed = cache.ped or PlayerPedId()
-
     if IsPedInAnyVehicle(playerPed, true) then return false end
 
     local playerState = LocalPlayer.state
-    local holding = playerState.holding
-    local refueling = playerState.refueling
 
-    if action == "refuel_jerrycan" then
-        return holding == "jerrycan" and not refueling
+    if playerState.refueling then
+        return false
     end
 
-    if action == "refuel_nozzle" or action == "return_nozzle" then
-        return (holding == "fv_nozzle" or holding == "ev_nozzle") and not refueling
-    elseif action == "take_nozzle" then
-        return holding == "null" and not refueling
+    local holding = playerState.holding
+    
+    if action == "take_nozzle" then
+        return holding == "null"
+    elseif action == "refuel_jerrycan" then
+        return holding == "jerrycan"
+    elseif action == "refuel_nozzle" or action == "return_nozzle" then
+        return (holding == "fv_nozzle" or holding == "ev_nozzle")
     elseif action == "buy_jerrycan" then
-        return (holding ~= "fv_nozzle" and holding ~= "ev_nozzle") and not refueling
+        return (holding ~= "fv_nozzle" and holding ~= "ev_nozzle")
     end
 
     return false
