@@ -2,6 +2,30 @@
 
 local utils = {}
 
+function utils.CheckFuelState(action)
+    local playerPed = cache.ped or PlayerPedId()
+
+    if IsPedInAnyVehicle(playerPed, true) then return false end
+
+    local playerState = LocalPlayer.state
+    local holding = playerState.holding
+    local refueling = playerState.refueling
+
+    if action == "refuel_jerrycan" then
+        return holding == "jerrycan" and not refueling
+    end
+
+    if action == "refuel_nozzle" or action == "return_nozzle" then
+        return (holding == "fv_nozzle" or holding == "ev_nozzle") and not refueling
+    elseif action == "take_nozzle" then
+        return holding == "null" and not refueling
+    elseif action == "buy_jerrycan" then
+        return (holding ~= "fv_nozzle" and holding ~= "ev_nozzle") and not refueling
+    end
+
+    return false
+end
+
 function utils.CreateBlip(coords, ev)
     local blip = AddBlipForCoord(coords.x, coords.y, coords.z)
     SetBlipAlpha(blip, 255)

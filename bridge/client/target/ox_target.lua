@@ -2,6 +2,7 @@
 
 if GetResourceState("ox_target") ~= "started" then return end
 
+local utils = require "client.utils"
 local ox_target = exports.ox_target
 
 target = {}
@@ -14,7 +15,7 @@ function target.AddGlobalVehicle()
             icon = "fas fa-gas-pump",
             distance = 3.0,
             canInteract = function()
-                return CheckFuelState("refuel_nozzle")
+                return utils.CheckFuelState("refuel_nozzle")
             end,
             event = "mnr_fuel:client:RefuelVehicle"
         },
@@ -23,7 +24,7 @@ function target.AddGlobalVehicle()
             name = "mnr_fuel:veh_option_2",
             icon = "fas fa-gas-pump",
             canInteract = function()
-                return CheckFuelState("refuel_jerrycan")
+                return utils.CheckFuelState("refuel_jerrycan")
             end,
             serverEvent = "mnr_fuel:server:RefuelVehicle"
         },
@@ -42,7 +43,7 @@ function target.AddModel(model, isEV)
             icon = isEV and "fas fa-bolt" or "fas fa-gas-pump",
             distance = 3.0,
             canInteract = function()
-                return CheckFuelState("take_nozzle")
+                return utils.CheckFuelState("take_nozzle")
             end,
             onSelect = function(data)
                 local pumpType = isEV and "ev" or "fv"
@@ -55,7 +56,7 @@ function target.AddModel(model, isEV)
             icon = "fas fa-hand",
             distance = 3.0,
             canInteract = function()
-                return CheckFuelState("return_nozzle")
+                return utils.CheckFuelState("return_nozzle")
             end,
             onSelect = function(data)
                 local pumpType = isEV and "ev" or "fv"
@@ -68,7 +69,7 @@ function target.AddModel(model, isEV)
             icon = "fas fa-fire-flame-simple",
             distance = 3.0,
             canInteract = function()
-                return CheckFuelState("buy_jerrycan")
+                return utils.CheckFuelState("buy_jerrycan")
             end,
             event = "mnr_fuel:client:BuyJerrycan",
         },

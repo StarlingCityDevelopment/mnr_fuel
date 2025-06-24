@@ -1,46 +1,13 @@
 local Config = lib.load("config.config")
 local stations = lib.load("config.stations")
-local utils = lib.load("client.utils")
+local utils = require "client.utils"
 
 local Blips = {}
 local FuelEntities = {nozzle = nil, rope = nil}
 
----@description Global Check for Target
-function CheckFuelState(action)
-    local playerPed = cache.ped or PlayerPedId()
-
-    if IsPedInAnyVehicle(playerPed, true) then return false end
-
-    local playerState = LocalPlayer.state
-    local holding = playerState.holding
-    local refueling = playerState.refueling
-
-    if action == "refuel_jerrycan" then
-        return holding == "jerrycan" and not refueling
-    end
-
-    if action == "refuel_nozzle" or action == "return_nozzle" then
-        return (holding == "fv_nozzle" or holding == "ev_nozzle") and not refueling
-    elseif action == "take_nozzle" then
-        return holding == "null" and not refueling
-    elseif action == "buy_jerrycan" then
-        return (holding ~= "fv_nozzle" and holding ~= "ev_nozzle") and not refueling
-    end
-
-    return false
-end
-
-lib.onCache("weapon", function(weapon)
-    local playerState = LocalPlayer.state
-    if weapon ~= `WEAPON_PETROLCAN` and playerState.holding ~= "null" then
-        utils.setPlayerState("holding", "null")
-    elseif weapon == `WEAPON_PETROLCAN` then
-        utils.setPlayerState("holding", "jerrycan")
-    end
-end)
-
+---@description TARGET EVENTS
 RegisterNetEvent("mnr_fuel:client:TakeNozzle", function(data, pumpType)
-	if not data.entity or not CheckFuelState("take_nozzle") then return end
+	if not data.entity or not utils.CheckFuelState("take_nozzle") then return end
 
 	local playerPed = cache.ped or PlayerPedId()
 	lib.requestAnimDict("anim@am_hold_up@male", 300)
@@ -104,7 +71,7 @@ RegisterNetEvent("mnr_fuel:client:TakeNozzle", function(data, pumpType)
 end)
 
 RegisterNetEvent("mnr_fuel:client:ReturnNozzle", function(data, pumpType)
-	if not CheckFuelState("return_nozzle") then return end
+	if not utils.CheckFuelState("return_nozzle") then return end
 	if utils.LoadAudioBank() then
 		PlaySoundFromEntity(-1, ("mnr_return_%s_nozzle"):format(pumpType), data.entity, "mnr_fuel", true, 0)
 	end
@@ -170,7 +137,7 @@ local function SecondaryMenu(purchase, vehicle, amount)
 end
 
 RegisterNetEvent("mnr_fuel:client:RefuelVehicle", function(data)
-	if not data.entity or not CheckFuelState("refuel_nozzle") then return end
+	if not data.entity or not utils.CheckFuelState("refuel_nozzle") then return end
 
 	local playerState = LocalPlayer.state
 	local isElectric = GetIsVehicleElectric(GetEntityModel(data.entity))
@@ -193,7 +160,7 @@ RegisterNetEvent("mnr_fuel:client:RefuelVehicle", function(data)
 end)
 
 RegisterNetEvent("mnr_fuel:client:BuyJerrycan", function(data)
-	if not data.entity or not CheckFuelState("buy_jerrycan") then return end
+	if not data.entity or not utils.CheckFuelState("buy_jerrycan") then return end
 
 	SecondaryMenu("jerrycan")
 end)
@@ -235,6 +202,16 @@ RegisterNetEvent("mnr_fuel:client:PlayRefuelAnim", function(data, isPump)
 		utils.setPlayerState("refueling", false)
 		client.Notify(locale("notify.refuel-success"), "success")
 	end
+end)
+
+---@description DYNAMIC FEATURES
+lib.onCache("weapon", function(weapon)
+    local playerState = LocalPlayer.state
+    if weapon ~= `WEAPON_PETROLCAN` and playerState.holding ~= "null" then
+        utils.setPlayerState("holding", "null")
+    elseif weapon == `WEAPON_PETROLCAN` then
+        utils.setPlayerState("holding", "jerrycan")
+    end
 end)
 
 ---@description RESOURCE STOP
