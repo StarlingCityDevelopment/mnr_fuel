@@ -38,4 +38,9 @@ function utils.RotateOffset(offset, heading)
     return vec3(newX, newY, offset.z)
 end
 
+function utils.setPlayerState(key, value)
+    local playerState = LocalPlayer.state
+    playerState:set(key, value, true)
+end
+
 return utils

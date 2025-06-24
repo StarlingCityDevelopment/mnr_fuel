@@ -1,5 +1,5 @@
 local Config = lib.load("config.config")
-local stationsData = lib.load("config.stations")
+local stations = lib.load("config.stations")
 local jerrycan = require "server.jerrycan"
 local InStation = {}
 
@@ -20,7 +20,7 @@ end)
 
 ---@description Zones Handling
 RegisterNetEvent("mnr_fuel:server:EnterStation", function(name)
-    local station = stationsData[name]
+    local station = stations[name]
 
     if not station then return end
     

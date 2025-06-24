@@ -1,82 +1,11 @@
 local Config = lib.load("config.config")
-local stationsData = lib.load("config.stations")
+local stations = lib.load("config.stations")
 local utils = lib.load("client.utils")
 
-local Stations = {Blips = {}, Zones = {}}
+local Blips = {}
 local FuelEntities = {nozzle = nil, rope = nil}
 
----@description Script Start & Stop
-local function CreateStation(name, data)
-	Stations.Zones[name] = lib.zones.sphere({
-		coords = data.coords,
-		radius = data.radius,
-		onEnter = function(self)
-			TriggerServerEvent("mnr_fuel:server:EnterStation", name)
-		end,
-		onExit = function(self)
-			TriggerServerEvent("mnr_fuel:server:ExitStation")
-		end,
-		debug = data.debug,
-	})
-
-	Stations.Blips[name] = utils.CreateBlip(data.coords, data.type == "ev")
-end
-
-AddEventHandler("onClientResourceStart", function(resourceName)
-    local scriptName = cache.resource or GetCurrentResourceName()
-    if resourceName ~= scriptName then return end
-
-	-- Init Player States
-	local playerState = LocalPlayer.state
-	playerState:set("holding", "null", true)
-	playerState:set("refueling", false, true)
-
-	-- Init Station Zones & Blips
-	for name, data in pairs(stationsData) do
-		CreateStation(name, data)
-	end
-
-	-- Init Targets
-	target.AddGlobalVehicle()
-	for model, data in pairs(Config.Pumps) do
-		target.AddModel(model, data.type == "ev")
-	end
-end)
-
-AddEventHandler("onResourceStop", function(resourceName)
-	local scriptName = cache.resource or GetCurrentResourceName()
-	if resourceName ~= scriptName then return end
-
-	-- Deletes entities and unloads textures
-	DeleteObject(FuelEntities.nozzle)
-	RopeUnloadTextures()
-	DeleteObject(FuelEntities.rope)
-
-	-- Removes targets
-	target.RemoveGlobalVehicle()
-
-	-- Removes blips
-	for _, blip in pairs(Stations.Blips) do
-		RemoveBlip(blip)
-	end
-end)
-
----@description Dynamic Features
-local function setPlayerState(key, value)
-    local playerState = LocalPlayer.state
-    playerState:set(key, value, true)
-end
-
-lib.onCache("weapon", function(weapon)
-    local playerState = LocalPlayer.state
-    if weapon ~= `WEAPON_PETROLCAN` and playerState.holding ~= "null" then
-        setPlayerState("holding", "null")
-    elseif weapon == `WEAPON_PETROLCAN` then
-        setPlayerState("holding", "jerrycan")
-    end
-end)
-
----@description Check for Target and Events
+---@description Global Check for Target
 function CheckFuelState(action)
     local playerPed = cache.ped or PlayerPedId()
 
@@ -100,6 +29,15 @@ function CheckFuelState(action)
 
     return false
 end
+
+lib.onCache("weapon", function(weapon)
+    local playerState = LocalPlayer.state
+    if weapon ~= `WEAPON_PETROLCAN` and playerState.holding ~= "null" then
+        utils.setPlayerState("holding", "null")
+    elseif weapon == `WEAPON_PETROLCAN` then
+        utils.setPlayerState("holding", "jerrycan")
+    end
+end)
 
 RegisterNetEvent("mnr_fuel:client:TakeNozzle", function(data, pumpType)
 	if not data.entity or not CheckFuelState("take_nozzle") then return end
@@ -143,7 +81,7 @@ RegisterNetEvent("mnr_fuel:client:TakeNozzle", function(data, pumpType)
 	local newPumpCoords = pumpCoords + rotatedPumpOffset
 	AttachEntitiesToRope(FuelEntities.rope, data.entity, FuelEntities.nozzle, newPumpCoords.x, newPumpCoords.y, newPumpCoords.z, nozzlePos.x, nozzlePos.y, nozzlePos.z, length, false, false, nil, nil)
 
-	setPlayerState("holding", ("%s_nozzle"):format(pumpType))
+	utils.setPlayerState("holding", ("%s_nozzle"):format(pumpType))
 	CreateThread(function()
 		local playerState = LocalPlayer.state
 		local nozzleName = ("%s_nozzle"):format(pumpType)
@@ -155,7 +93,7 @@ RegisterNetEvent("mnr_fuel:client:TakeNozzle", function(data, pumpType)
 			if dist > 7.5 then
 				if TargetCreated then if Config.FuelTargetExport then exports["ox_target"]:AllowRefuel(false) end end
 				TargetCreated = true
-				setPlayerState("holding", "null")
+				utils.setPlayerState("holding", "null")
 				DeleteObject(FuelEntities.nozzle)
 				RopeUnloadTextures()
 				DeleteRope(FuelEntities.rope)
@@ -170,7 +108,7 @@ RegisterNetEvent("mnr_fuel:client:ReturnNozzle", function(data, pumpType)
 	if utils.LoadAudioBank() then
 		PlaySoundFromEntity(-1, ("mnr_return_%s_nozzle"):format(pumpType), data.entity, "mnr_fuel", true, 0)
 	end
-	setPlayerState("holding", "null")
+	utils.setPlayerState("holding", "null")
 	TargetCreated = false
 	Wait(250)
 	if Config.FuelTargetExport then exports["ox_target"]:AllowRefuel(false) end
@@ -273,7 +211,7 @@ RegisterNetEvent("mnr_fuel:client:PlayRefuelAnim", function(data, isPump)
 	Wait(500)
 
 	local refuelTime = data.Amount * 2000
-	setPlayerState("refueling", true)
+	utils.setPlayerState("refueling", true)
 	local pumpType = playerState.holding == "fv_nozzle" and "fv" or playerState.holding == "ev_nozzle" and "ev"
 	local soundId = GetSoundId()
 	if utils.LoadAudioBank() then
@@ -294,7 +232,53 @@ RegisterNetEvent("mnr_fuel:client:PlayRefuelAnim", function(data, isPump)
 		StopSound(soundId)
 		ReleaseSoundId(soundId)
 		PlaySoundFromEntity(-1, ("mnr_%s_stop"):format(pumpType), FuelEntities.nozzle, "mnr_fuel", true, 0)
-		setPlayerState("refueling", false)
+		utils.setPlayerState("refueling", false)
 		client.Notify(locale("notify.refuel-success"), "success")
 	end
 end)
+
+---@description RESOURCE STOP
+AddEventHandler("onResourceStop", function(resourceName)
+	local scriptName = cache.resource or GetCurrentResourceName()
+	if resourceName ~= scriptName then return end
+
+	DeleteObject(FuelEntities.nozzle)
+	RopeUnloadTextures()
+	DeleteObject(FuelEntities.rope)
+
+	target.RemoveGlobalVehicle()
+
+	for _, blip in pairs(Blips) do
+		RemoveBlip(blip)
+	end
+end)
+
+---@description INITIALIZATION FUNCTIONS
+local function CreateStation(name, data)
+	lib.zones.sphere({
+		coords = data.coords,
+		radius = data.radius,
+		onEnter = function(self)
+			TriggerServerEvent("mnr_fuel:server:EnterStation", name)
+		end,
+		onExit = function(self)
+			TriggerServerEvent("mnr_fuel:server:ExitStation")
+		end,
+		debug = data.debug,
+	})
+
+	Blips[name] = utils.CreateBlip(data.coords, data.type == "ev")
+end
+
+---@description INITIALIZATION
+utils.setPlayerState("holding", "null")
+utils.setPlayerState("refueling", false)
+
+for name, data in pairs(stations) do
+	CreateStation(name, data)
+end
+
+target.AddGlobalVehicle()
+for model, data in pairs(Config.Pumps) do
+	target.AddModel(model, data.type == "ev")
+end
