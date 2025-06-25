@@ -42,6 +42,12 @@ function utils.CreateBlip(coords, ev)
     return blip
 end
 
+function utils.DeleteFuelEntities(nozzle, rope)
+    DeleteObject(nozzle)
+    RopeUnloadTextures()
+    DeleteRope(rope)
+end
+
 function utils.LoadAudioBank()
     if not RequestScriptAudioBank("audiodirectory/mnr_fuel", false) then
         while not RequestScriptAudioBank("audiodirectory/mnr_fuel", false) do

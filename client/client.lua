@@ -61,9 +61,7 @@ RegisterNetEvent("mnr_fuel:client:TakeNozzle", function(data, pumpType)
 				if TargetCreated then if Config.FuelTargetExport then exports["ox_target"]:AllowRefuel(false) end end
 				TargetCreated = true
 				utils.setPlayerState("holding", "null")
-				DeleteObject(FuelEntities.nozzle)
-				RopeUnloadTextures()
-				DeleteRope(FuelEntities.rope)
+				utils.DeleteFuelEntities(FuelEntities.nozzle, FuelEntities.rope)
 			end
 			Wait(2500)
 		end
@@ -78,10 +76,7 @@ RegisterNetEvent("mnr_fuel:client:ReturnNozzle", function(data, pumpType)
 	utils.setPlayerState("holding", "null")
 	TargetCreated = false
 	Wait(250)
-	if Config.FuelTargetExport then exports["ox_target"]:AllowRefuel(false) end
-	DeleteObject(FuelEntities.nozzle)
-	RopeUnloadTextures()
-	DeleteRope(FuelEntities.rope)
+	utils.DeleteFuelEntities(FuelEntities.nozzle, FuelEntities.rope)
 end)
 
 local function SecondaryMenu(purchase, vehicle, amount)
@@ -219,9 +214,7 @@ AddEventHandler("onResourceStop", function(resourceName)
 	local scriptName = cache.resource or GetCurrentResourceName()
 	if resourceName ~= scriptName then return end
 
-	DeleteObject(FuelEntities.nozzle)
-	RopeUnloadTextures()
-	DeleteObject(FuelEntities.rope)
+	utils.DeleteFuelEntities(FuelEntities.nozzle, FuelEntities.rope)
 
 	target.RemoveGlobalVehicle()
 
