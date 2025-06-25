@@ -2,7 +2,6 @@ return {
     GlobalTax = 15.0,
     FuelPrice = 2,
     JerrycanPrice = 500,
-    FuelUsage = 10.0,
     NozzleType = {
         ["fv"] = {hash = `prop_cs_fuel_nozle`, offsets = {hand = {0.13, 0.04, 0.01, -42.0, -115.0, -63.42}, rope = vec3(0.0, -0.033, -0.195)}},
     },

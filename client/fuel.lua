@@ -1,13 +1,11 @@
 -- code by (https://github.com/overextended/ox_fuel)
 -- with a little but unwanted simplification (https://github.com/overextended/ox_fuel/pull/110)
 
-local Config = lib.load("config.config")
-
 local fuel = {LastVehicle = cache.vehicle or GetPlayersLastVehicle()}
 if fuel.LastVehicle == 0 then fuel.LastVehicle = nil end
 
 SetFuelConsumptionState(true)
-SetFuelConsumptionRateMultiplier(Config.FuelUsage)
+SetFuelConsumptionRateMultiplier(10.0)
 
 local function SetFuel(vehState, vehicle, amount, replicate)
     if DoesEntityExist(vehicle) then
@@ -34,7 +32,7 @@ local function startFuelConsumption()
 	while cache.seat == -1 do
 		if GetIsVehicleEngineRunning(vehicle) then
 			if not DoesEntityExist(vehicle) then return end
-			SetFuelConsumptionRateMultiplier(Config.FuelUsage)
+			SetFuelConsumptionRateMultiplier(10.0)
 
 			local fuelAmount = tonumber(vehState.fuel)
 			local newFuel = GetVehicleFuelLevel(vehicle)
