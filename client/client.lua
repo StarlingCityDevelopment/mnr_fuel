@@ -10,9 +10,8 @@ RegisterNetEvent("mnr_fuel:client:TakeNozzle", function(data, pumpType)
 	if not data.entity or not utils.CheckFuelState("take_nozzle") then return end
 
 	lib.requestAnimDict("anim@am_hold_up@male", 300)
-	if utils.LoadAudioBank() then
-		PlaySoundFromEntity(-1, "mnr_take_fv_nozzle", data.entity, "mnr_fuel", true, 0)
-	end
+	lib.requestAudioBank("audiodirectory/mnr_fuel")
+	PlaySoundFromEntity(-1, "mnr_take_fv_nozzle", data.entity, "mnr_fuel", true, 0)
 	TaskPlayAnim(cache.ped, "anim@am_hold_up@male", "shoplift_high", 2.0, 8.0, -1, 50, 0, 0, 0, 0)
 	Wait(300)
 	StopAnimTask(cache.ped, "anim@am_hold_up@male", "shoplift_high", 1.0)
@@ -65,9 +64,9 @@ end)
 
 RegisterNetEvent("mnr_fuel:client:ReturnNozzle", function(data, pumpType)
 	if not utils.CheckFuelState("return_nozzle") then return end
-	if utils.LoadAudioBank() then
-		PlaySoundFromEntity(-1, ("mnr_return_%s_nozzle"):format(pumpType), data.entity, "mnr_fuel", true, 0)
-	end
+	
+	lib.requestAudioBank("audiodirectory/mnr_fuel")
+	PlaySoundFromEntity(-1, ("mnr_return_%s_nozzle"):format(pumpType), data.entity, "mnr_fuel", true, 0)
 	utils.setPlayerState("holding", "null")
 	Wait(250)
 	utils.DeleteFuelEntities(FuelEntities.nozzle, FuelEntities.rope)
@@ -169,9 +168,9 @@ RegisterNetEvent("mnr_fuel:client:PlayRefuelAnim", function(data, isPump)
 	utils.setPlayerState("refueling", true)
 	local pumpType = playerState.holding == "fv_nozzle" and "fv" or playerState.holding == "ev_nozzle" and "ev"
 	local soundId = GetSoundId()
-	if utils.LoadAudioBank() then
-		PlaySoundFromEntity(soundId, ("mnr_%s_start"):format(pumpType), FuelEntities.nozzle, "mnr_fuel", true, 0)
-	end
+	lib.requestAudioBank("audiodirectory/mnr_fuel")
+	PlaySoundFromEntity(soundId, ("mnr_%s_start"):format(pumpType), FuelEntities.nozzle, "mnr_fuel", true, 0)
+	
 	if lib.progressCircle({
 		duration = refuelTime,
 		label = locale("progress.refueling-vehicle"),
