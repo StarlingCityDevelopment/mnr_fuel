@@ -13,7 +13,7 @@ function target.AddGlobalVehicle()
             label = locale("target.refuel-nozzle"),
             name = "mnr_fuel:veh_option_1",
             icon = "fas fa-gas-pump",
-            distance = 3.0,
+            distance = 1.5,
             canInteract = function()
                 return utils.CheckFuelState("refuel_nozzle")
             end,

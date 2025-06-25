@@ -32,7 +32,7 @@ function target.AddGlobalVehicle()
                 end,
             },
         },
-        distance = 3.0,
+        distance = 1.5,
     })
 end
 

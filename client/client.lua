@@ -153,7 +153,6 @@ RegisterNetEvent("mnr_fuel:client:BuyJerrycan", function(data)
 	SecondaryMenu("jerrycan")
 end)
 
----@todo fix player direction
 RegisterNetEvent("mnr_fuel:client:PlayRefuelAnim", function(data, isPump)
 	local playerState = LocalPlayer.state
 	if isPump and not (playerState.holding == "fv_nozzle" or playerState.holding == "ev_nozzle") then return end
