@@ -55,11 +55,7 @@ RegisterNetEvent("mnr_fuel:client:TakeNozzle", function(data, pumpType)
 		while playerState.holding == nozzleName do
 			local currentcoords = GetEntityCoords(playerPed)
 			local dist = #(playerCoords - currentcoords)
-			if not TargetCreated then if Config.FuelTargetExport then exports["ox_target"]:AllowRefuel(true) end end
-			TargetCreated = true
 			if dist > 7.5 then
-				if TargetCreated then if Config.FuelTargetExport then exports["ox_target"]:AllowRefuel(false) end end
-				TargetCreated = true
 				utils.setPlayerState("holding", "null")
 				utils.DeleteFuelEntities(FuelEntities.nozzle, FuelEntities.rope)
 			end
@@ -74,7 +70,6 @@ RegisterNetEvent("mnr_fuel:client:ReturnNozzle", function(data, pumpType)
 		PlaySoundFromEntity(-1, ("mnr_return_%s_nozzle"):format(pumpType), data.entity, "mnr_fuel", true, 0)
 	end
 	utils.setPlayerState("holding", "null")
-	TargetCreated = false
 	Wait(250)
 	utils.DeleteFuelEntities(FuelEntities.nozzle, FuelEntities.rope)
 end)
