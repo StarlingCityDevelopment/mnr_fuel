@@ -3,8 +3,7 @@
 local utils = {}
 
 function utils.CheckFuelState(action)
-    local playerPed = cache.ped or PlayerPedId()
-    if IsPedInAnyVehicle(playerPed, true) then return false end
+    if IsPedInAnyVehicle(cache.ped, true) then return false end
 
     local playerState = LocalPlayer.state
 

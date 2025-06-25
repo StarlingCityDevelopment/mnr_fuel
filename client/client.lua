@@ -9,23 +9,22 @@ local FuelEntities = {nozzle = nil, rope = nil}
 RegisterNetEvent("mnr_fuel:client:TakeNozzle", function(data, pumpType)
 	if not data.entity or not utils.CheckFuelState("take_nozzle") then return end
 
-	local playerPed = cache.ped or PlayerPedId()
 	lib.requestAnimDict("anim@am_hold_up@male", 300)
 	if utils.LoadAudioBank() then
 		PlaySoundFromEntity(-1, "mnr_take_fv_nozzle", data.entity, "mnr_fuel", true, 0)
 	end
-	TaskPlayAnim(playerPed, "anim@am_hold_up@male", "shoplift_high", 2.0, 8.0, -1, 50, 0, 0, 0, 0)
+	TaskPlayAnim(cache.ped, "anim@am_hold_up@male", "shoplift_high", 2.0, 8.0, -1, 50, 0, 0, 0, 0)
 	Wait(300)
-	StopAnimTask(playerPed, "anim@am_hold_up@male", "shoplift_high", 1.0)
+	StopAnimTask(cache.ped, "anim@am_hold_up@male", "shoplift_high", 1.0)
 	RemoveAnimDict("anim@am_hold_up@male")
 
 	local pump = GetEntityModel(data.entity)
     local pumpCoords = GetEntityCoords(data.entity)
 	local nozzleModel = Config.NozzleType[pumpType].hash
 	local handOffset = Config.NozzleType[pumpType].offsets.hand
-	local lefthand = GetPedBoneIndex(playerPed, 18905)
+	local lefthand = GetPedBoneIndex(cache.ped, 18905)
 	FuelEntities.nozzle = CreateObject(nozzleModel, 1.0, 1.0, 1.0, true, true, false)
-	AttachEntityToEntity(FuelEntities.nozzle, playerPed, lefthand, handOffset[1], handOffset[2], handOffset[3], handOffset[4], handOffset[5], handOffset[6], false, true, false, true, 0, true)
+	AttachEntityToEntity(FuelEntities.nozzle, cache.ped, lefthand, handOffset[1], handOffset[2], handOffset[3], handOffset[4], handOffset[5], handOffset[6], false, true, false, true, 0, true)
 
     RopeLoadTextures()
     while not RopeAreTexturesLoaded() do
@@ -39,7 +38,7 @@ RegisterNetEvent("mnr_fuel:client:TakeNozzle", function(data, pumpType)
 	ActivatePhysics(FuelEntities.rope)
 	Wait(100)
 
-	local playerCoords = GetEntityCoords(playerPed)
+	local playerCoords = GetEntityCoords(cache.ped)
 	local nozzlePos = GetEntityCoords(FuelEntities.nozzle)
 	local nozzleOffset = Config.NozzleType[pumpType].offsets.rope
 	nozzlePos = GetOffsetFromEntityInWorldCoords(FuelEntities.nozzle, nozzleOffset.x, nozzleOffset.y, nozzleOffset.z)
@@ -53,7 +52,7 @@ RegisterNetEvent("mnr_fuel:client:TakeNozzle", function(data, pumpType)
 		local playerState = LocalPlayer.state
 		local nozzleName = ("%s_nozzle"):format(pumpType)
 		while playerState.holding == nozzleName do
-			local currentcoords = GetEntityCoords(playerPed)
+			local currentcoords = GetEntityCoords(cache.ped)
 			local dist = #(playerCoords - currentcoords)
 			if dist > 7.5 then
 				utils.setPlayerState("holding", "null")
@@ -162,9 +161,8 @@ RegisterNetEvent("mnr_fuel:client:PlayRefuelAnim", function(data, isPump)
 	if not isPump and not playerState.holding == "jerrycan" then return end
 
 	local vehicle = NetToVeh(data.netId)
-	local playerPed = cache.ped or PlayerPedId()
 
-	TaskTurnPedToFaceEntity(playerPed, vehicle, 500)
+	TaskTurnPedToFaceEntity(cache.ped, vehicle, 500)
 	Wait(500)
 
 	local refuelTime = data.Amount * 2000
