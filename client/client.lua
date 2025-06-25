@@ -8,6 +8,7 @@ local FuelEntities = {nozzle = nil, rope = nil}
 ---@description TARGET EVENTS
 RegisterNetEvent("mnr_fuel:client:TakeNozzle", function(data, pumpType)
 	if not data.entity or not utils.CheckFuelState("take_nozzle") then return end
+	if not lib.callback.await("mnr_fuel:server:InStation") then return end
 
 	lib.requestAnimDict("anim@am_hold_up@male", 300)
 	lib.requestAudioBank("audiodirectory/mnr_fuel")
@@ -73,6 +74,7 @@ RegisterNetEvent("mnr_fuel:client:ReturnNozzle", function(data, pumpType)
 end)
 
 local function SecondaryMenu(purchase, vehicle, amount)
+	if not lib.callback.await("mnr_fuel:server:InStation") then return end
 	local totalCost = (purchase == "fuel") and math.ceil(amount * GlobalState.fuelPrice) or Config.JerrycanPrice
 	local vehNetID = (purchase == "fuel") and NetworkGetEntityIsNetworked(vehicle) and VehToNet(vehicle)
 	local cashMoney, bankMoney = lib.callback.await("mnr_fuel:server:GetPlayerMoney", false)
@@ -126,6 +128,7 @@ end
 
 RegisterNetEvent("mnr_fuel:client:RefuelVehicle", function(data)
 	if not data.entity or not utils.CheckFuelState("refuel_nozzle") then return end
+	if not lib.callback.await("mnr_fuel:server:InStation") then return end
 
 	local playerState = LocalPlayer.state
 	local isElectric = GetIsVehicleElectric(GetEntityModel(data.entity))
@@ -149,6 +152,7 @@ end)
 
 RegisterNetEvent("mnr_fuel:client:BuyJerrycan", function(data)
 	if not data.entity or not utils.CheckFuelState("buy_jerrycan") then return end
+	if not lib.callback.await("mnr_fuel:server:InStation") then return end
 
 	SecondaryMenu("jerrycan")
 end)
