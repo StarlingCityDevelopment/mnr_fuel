@@ -5,7 +5,7 @@ return {
         debug = false,
         type = "fv",
         pumps = {
-            { coords = vec3(-324.7491, -1480.4140, 29.72881), type = "fv" },
+            { coords = vec3(-324.7491, -1480.4140, 29.7288), type = "fv" },
             { coords = vec3(-329.8195, -1471.6396, 29.7290), type = "fv" },
             { coords = vec3(-317.2628, -1476.0917, 29.7250), type = "fv" },
             { coords = vec3(-322.3332, -1467.3176, 29.7206), type = "fv" },
