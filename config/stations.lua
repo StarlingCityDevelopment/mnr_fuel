@@ -43,6 +43,11 @@ return {
         radius = 20.00,
         debug = false,
         type = "fv",
+        pumps = {
+            { coords = vec3(1705.7370, 6414.6000, 31.7600), type = "fv" },
+            { coords = vec3(1701.7243, 6416.4829, 31.7600), type = "fv" },
+            { coords = vec3(1697.7565, 6418.3442, 31.7600), type = "fv" },
+        },
     },
     ["A05"] = { --[[Globe Oil | Rex's Diner]]
         coords = vec3(2539.7944, 2594.8078, 39.00),
