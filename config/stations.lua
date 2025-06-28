@@ -5,7 +5,7 @@ return {
         debug = false,
         type = "fv",
         pumps = {
-            { coords = vec3(-324.7491, -1480.4140, 29.72881), type = "fv" },
+            { coords = vec3(-324.7491, -1480.4140, 29.7288), type = "fv" },
             { coords = vec3(-329.8195, -1471.6396, 29.7290), type = "fv" },
             { coords = vec3(-317.2628, -1476.0917, 29.7250), type = "fv" },
             { coords = vec3(-322.3332, -1467.3176, 29.7206), type = "fv" },
@@ -18,6 +18,14 @@ return {
         radius = 35.00,
         debug = false,
         type = "fv",
+        pumps = {
+            { coords = vec3(612.4322, 263.8357, 102.2695), type = "fv" },
+            { coords = vec3(612.4210, 273.9571, 102.2695), type = "fv" },
+            { coords = vec3(620.9901, 263.8359, 102.2695), type = "fv" },
+            { coords = vec3(620.9860, 273.9697, 102.2695), type = "fv" },
+            { coords = vec3(629.6345, 263.8356, 102.2695), type = "fv" },
+            { coords = vec3(629.6306, 273.9698, 102.2695), type = "fv" },
+        },
     },
     ["A03"] = { --[[Globe Oil | Harmony]]
         coords = vec3(1208.5097, 2659.4279, 39.00),
