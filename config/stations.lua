@@ -54,6 +54,9 @@ return {
         radius = 15.00,
         debug = false,
         type = "fv",
+        pumps = {
+            { coords = vec3(2539.7944, 2594.8078, 36.9557), type = "fv" },
+        },
     },
     ["A06"] = { --[[Globe Oil | Route 68]]
         coords = vec3(1038.6393, 2670.8201, 41.00),
