@@ -32,6 +32,11 @@ return {
         radius = 17.00,
         debug = false,
         type = "fv",
+        pumps = {
+            { coords = vec3(1205.8997, 2662.0485, 36.8967), type = "fv" },
+            { coords = vec3(1208.5097, 2659.4279, 36.8981), type = "fv" },
+            { coords = vec3(1209.5815, 2658.3515, 36.8995), type = "fv" },
+        },
     },
     ["A04"] = { --[[Globe Oil | Paleto]]
         coords = vec3(1701.7243, 6416.4829, 34.00),
