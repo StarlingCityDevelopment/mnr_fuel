@@ -75,6 +75,10 @@ return {
         radius = 20.00,
         debug = false,
         type = "fv",
+        pumps = {
+            { coords = vec3(263.0825, 2606.7946, 43.9832), type = "fv" },
+            { coords = vec3(264.9763, 2607.1777, 43.9832), type = "fv" },
+        },
     },
     ["A08"] = { --[[Globe Oil | Sandy Shores]]
         coords = vec3(1785.8026, 3330.2847, 43.00),
