@@ -2,7 +2,7 @@
 
 if GetResourceState("qb-target") ~= "started" then return end
 
-local utils = require "client.utils"
+local state = require "client.state"
 local qb_target = exports["qb-target"]
 
 target = {}
@@ -14,7 +14,7 @@ function target.AddGlobalVehicle()
                 label = locale("target.refuel-nozzle"),
                 icon = "fas fa-gas-pump",
                 canInteract = function()
-                    return utils.CheckFuelState("refuel_nozzle")
+                    return not state.refueling and (state.holding == "fv_nozzle" or state.holding == "ev_nozzle")
                 end,
                 action = function(entity)
                     TriggerEvent("mnr_fuel:client:RefuelVehicle", {entity = entity})
@@ -24,7 +24,7 @@ function target.AddGlobalVehicle()
                 label = locale("target.refuel-jerrycan"),
                 icon = "fas fa-gas-pump",
                 canInteract = function()
-                    return utils.CheckFuelState("refuel_jerrycan")
+                    return not state.refueling and state.holding == "jerrycan"
                 end,
                 action = function(entity)
                     local vehNetID = NetworkGetNetworkIdFromEntity(entity)
@@ -48,7 +48,7 @@ function target.AddModel(model, isEV)
                 label = locale(isEV and "target.take-charger" or "target.take-nozzle"),
                 icon = isEV and "fas fa-bolt" or "fas fa-gas-pump",
                 canInteract = function()
-                    return utils.CheckFuelState("take_nozzle")
+                    return not state.refueling and state.holding == "null"
                 end,
                 action = function(entity)
                     local pumpType = isEV and "ev" or "fv"
@@ -60,7 +60,7 @@ function target.AddModel(model, isEV)
                 label = locale(isEV and "target.return-charger" or "target.return-nozzle"),
                 icon = "fas fa-hand",
                 canInteract = function()
-                    return utils.CheckFuelState("return_nozzle")
+                    return not state.refueling and (state.holding == "fv_nozzle" or state.holding == "ev_nozzle")
                 end,
                 action = function(entity)
                     local pumpType = isEV and "ev" or "fv"
@@ -72,7 +72,7 @@ function target.AddModel(model, isEV)
                 label = locale("target.buy-jerrycan"),
                 icon = "fas fa-fire-flame-simple",
                 canInteract = function()
-                    return utils.CheckFuelState("buy_jerrycan")
+                    return not state.refueling and (state.holding ~= "fv_nozzle" and state.holding ~= "ev_nozzle")
                 end,
                 action = function(entity)
                     TriggerEvent("mnr_fuel:client:BuyJerrycan")
