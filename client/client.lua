@@ -167,7 +167,7 @@ RegisterNetEvent("mnr_fuel:client:PlayRefuelAnim", function(data, isPump)
 
 	local refuelTime = data.Amount * 2000
 	state:set("refueling", true)
-	local pumpType = playerState.holding == "fv_nozzle" and "fv" or playerState.holding == "ev_nozzle" and "ev"
+	local pumpType = state.holding == "fv_nozzle" and "fv" or state.holding == "ev_nozzle" and "ev"
 	local soundId = GetSoundId()
 	lib.requestAudioBank("audiodirectory/mnr_fuel")
 	PlaySoundFromEntity(soundId, ("mnr_%s_start"):format(pumpType), FuelEntities.nozzle, "mnr_fuel", true, 0)

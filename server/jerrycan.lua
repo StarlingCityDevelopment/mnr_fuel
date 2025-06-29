@@ -24,8 +24,8 @@ function jerrycan.buy(source, method, price)
 end
 
 function jerrycan.purchase(source, method, price)
-    local playerState = Player(source).state
-    if playerState.holding == "jerrycan" then
+    local item = inventory.GetJerrycan(source)
+    if item.name == "WEAPON_PETROLCAN" then
         return jerrycan.refill(source, method, price)
     else
         return jerrycan.buy(source, method, price)

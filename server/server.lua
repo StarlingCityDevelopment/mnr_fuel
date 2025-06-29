@@ -74,8 +74,9 @@ end)
 
 RegisterNetEvent("mnr_fuel:server:RefuelVehicle", function(data)
 	if not data.entity then return end
-	local playerState = Player(source).state
-	if playerState.holding ~= "jerrycan" then return end
+
+	local item, durability = inventory.GetJerrycan(source)
+	if not item or item.name ~= "WEAPON_PETROLCAN" then return end
 
 	local vehicle = NetworkGetEntityFromNetworkId(data.entity)
 	if vehicle == 0 or GetEntityType(vehicle) ~= 2 then return end
