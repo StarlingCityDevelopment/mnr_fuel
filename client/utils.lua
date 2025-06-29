@@ -2,30 +2,6 @@
 
 local utils = {}
 
-function utils.CheckFuelState(action)
-    if IsPedInAnyVehicle(cache.ped, true) then return false end
-
-    local playerState = LocalPlayer.state
-
-    if playerState.refueling then
-        return false
-    end
-
-    local holding = playerState.holding
-
-    if action == "take_nozzle" then
-        return holding == "null"
-    elseif action == "refuel_jerrycan" then
-        return holding == "jerrycan"
-    elseif action == "refuel_nozzle" or action == "return_nozzle" then
-        return (holding == "fv_nozzle" or holding == "ev_nozzle")
-    elseif action == "buy_jerrycan" then
-        return (holding ~= "fv_nozzle" and holding ~= "ev_nozzle")
-    end
-
-    return false
-end
-
 function utils.CreateBlip(coords, ev)
     local blip = AddBlipForCoord(coords.x, coords.y, coords.z)
     SetBlipAlpha(blip, 255)
@@ -56,11 +32,6 @@ function utils.RotateOffset(offset, heading)
     local newY = offset.x * sinH + offset.y * cosH
 
     return vec3(newX, newY, offset.z)
-end
-
-function utils.setPlayerState(key, value)
-    local playerState = LocalPlayer.state
-    playerState:set(key, value, true)
 end
 
 return utils

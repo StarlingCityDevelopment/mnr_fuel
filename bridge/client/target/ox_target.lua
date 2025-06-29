@@ -3,6 +3,7 @@
 if GetResourceState("ox_target") ~= "started" then return end
 
 local utils = require "client.utils"
+local state = require "client.state"
 local ox_target = exports.ox_target
 
 target = {}
@@ -15,7 +16,7 @@ function target.AddGlobalVehicle()
             icon = "fas fa-gas-pump",
             distance = 1.5,
             canInteract = function()
-                return utils.CheckFuelState("refuel_nozzle")
+                return not state.refueling and (state.holding == "fv_nozzle" or state.holding == "ev_nozzle")
             end,
             event = "mnr_fuel:client:RefuelVehicle"
         },
@@ -24,7 +25,7 @@ function target.AddGlobalVehicle()
             name = "mnr_fuel:veh_option_2",
             icon = "fas fa-gas-pump",
             canInteract = function()
-                return utils.CheckFuelState("refuel_jerrycan")
+                return not state.refueling and state.holding == "jerrycan"
             end,
             serverEvent = "mnr_fuel:server:RefuelVehicle"
         },
@@ -43,7 +44,7 @@ function target.AddModel(model, isEV)
             icon = isEV and "fas fa-bolt" or "fas fa-gas-pump",
             distance = 3.0,
             canInteract = function()
-                return utils.CheckFuelState("take_nozzle")
+                return not state.refueling and state.holding == "null"
             end,
             onSelect = function(data)
                 local pumpType = isEV and "ev" or "fv"
@@ -56,7 +57,7 @@ function target.AddModel(model, isEV)
             icon = "fas fa-hand",
             distance = 3.0,
             canInteract = function()
-                return utils.CheckFuelState("return_nozzle")
+                return not state.refueling and (state.holding == "fv_nozzle" or state.holding == "ev_nozzle")
             end,
             onSelect = function(data)
                 local pumpType = isEV and "ev" or "fv"
@@ -69,7 +70,7 @@ function target.AddModel(model, isEV)
             icon = "fas fa-fire-flame-simple",
             distance = 3.0,
             canInteract = function()
-                return utils.CheckFuelState("buy_jerrycan")
+                return not state.refueling and (state.holding ~= "fv_nozzle" and state.holding ~= "ev_nozzle")
             end,
             event = "mnr_fuel:client:BuyJerrycan",
         },
