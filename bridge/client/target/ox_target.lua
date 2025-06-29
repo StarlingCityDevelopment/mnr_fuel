@@ -2,7 +2,6 @@
 
 if GetResourceState("ox_target") ~= "started" then return end
 
-local utils = require "client.utils"
 local state = require "client.state"
 local ox_target = exports.ox_target
 
@@ -36,11 +35,11 @@ function target.RemoveGlobalVehicle()
     ox_target:removeGlobalVehicle("mnr_fuel:veh_option")
 end
 
-function target.AddModel(model, isEV)
-    ox_target:addModel(model, {
+function target.AddPumpTargets(entity, isEV)
+    ox_target:addLocalEntity(entity, {
         {
             label = locale(isEV and "target.take-charger" or "target.take-nozzle"),
-            name = "mnr_fuel:pump_option_1",
+            name = "mnr_fuel:pump:option_1",
             icon = isEV and "fas fa-bolt" or "fas fa-gas-pump",
             distance = 3.0,
             canInteract = function()
@@ -53,7 +52,7 @@ function target.AddModel(model, isEV)
         },
         {
             label = locale(isEV and "target.return-charger" or "target.return-nozzle"),
-            name = "mnr_fuel:pump_option_2",
+            name = "mnr_fuel:pump:option_2",
             icon = "fas fa-hand",
             distance = 3.0,
             canInteract = function()
@@ -66,7 +65,7 @@ function target.AddModel(model, isEV)
         },
         {
             label = locale("target.buy-jerrycan"),
-            name = "mnr_fuel:pump_option_3",
+            name = "mnr_fuel:pump:option_3",
             icon = "fas fa-fire-flame-simple",
             distance = 3.0,
             canInteract = function()
@@ -74,5 +73,13 @@ function target.AddModel(model, isEV)
             end,
             event = "mnr_fuel:client:BuyJerrycan",
         },
+    })
+end
+
+function target.RemovePumpTargets(entity)
+    ox_target:removeLocalEntity(entity, {
+        "mnr_fuel:pump:option_1",
+        "mnr_fuel:pump:option_2",
+        "mnr_fuel:pump:option_3",
     })
 end

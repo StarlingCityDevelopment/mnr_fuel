@@ -215,6 +215,18 @@ AddEventHandler("onResourceStop", function(resourceName)
 	end
 end)
 
+---@description Dynamic Targets Update [BETA]
+local function toggleStationTargets(pumps, enabled)
+	for _, pump in ipairs(pumps) do
+		local entity = GetClosestObjectOfType(pump.coords.x, pump.coords.y, pump.coords.z, 0.2, pump.hash, false, false, false)
+		if enabled then
+			target.AddPumpTargets(entity, pump.type == "ev")
+		else
+			target.RemovePumpTargets(entity)
+		end
+	end
+end
+
 ---@description INITIALIZATION FUNCTIONS
 local function CreateStation(name, data)
 	lib.zones.sphere({
@@ -222,9 +234,11 @@ local function CreateStation(name, data)
 		radius = data.radius,
 		onEnter = function(self)
 			TriggerServerEvent("mnr_fuel:server:EnterStation", name)
+			toggleStationTargets(data.pumps, true)
 		end,
 		onExit = function(self)
 			TriggerServerEvent("mnr_fuel:server:ExitStation")
+			toggleStationTargets(data.pumps, false)
 		end,
 		debug = data.debug,
 	})
@@ -240,6 +254,3 @@ for name, data in pairs(stations) do
 end
 
 target.AddGlobalVehicle()
-for model, data in pairs(Config.Pumps) do
-	target.AddModel(model, data.type == "ev")
-end
