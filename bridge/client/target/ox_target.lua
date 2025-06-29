@@ -35,8 +35,8 @@ function target.RemoveGlobalVehicle()
     ox_target:removeGlobalVehicle("mnr_fuel:veh_option")
 end
 
-function target.AddPumpTargets(entity, isEV)
-    ox_target:addLocalEntity(entity, {
+function target.AddModel(model, isEV)
+    ox_target:addModel(model, {
         {
             label = locale(isEV and "target.take-charger" or "target.take-nozzle"),
             name = "mnr_fuel:pump:option_1",
@@ -73,13 +73,5 @@ function target.AddPumpTargets(entity, isEV)
             end,
             event = "mnr_fuel:client:BuyJerrycan",
         },
-    })
-end
-
-function target.RemovePumpTargets(entity)
-    ox_target:removeLocalEntity(entity, {
-        "mnr_fuel:pump:option_1",
-        "mnr_fuel:pump:option_2",
-        "mnr_fuel:pump:option_3",
     })
 end
