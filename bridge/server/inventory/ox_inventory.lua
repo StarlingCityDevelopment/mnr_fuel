@@ -22,6 +22,11 @@ end
 
 function inventory.GetJerrycan(source)
     local weapon = ox_inventory:GetCurrentWeapon(source)
+
+    if not weapon then
+        return false, false
+    end
+
     local durability = weapon.metadata.durability
     return weapon, durability
 end

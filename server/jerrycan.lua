@@ -25,7 +25,7 @@ end
 
 function jerrycan.purchase(source, method, price)
     local item = inventory.GetJerrycan(source)
-    if item.name == "WEAPON_PETROLCAN" then
+    if item and item.name == "WEAPON_PETROLCAN" then
         return jerrycan.refill(source, method, price)
     else
         return jerrycan.buy(source, method, price)
