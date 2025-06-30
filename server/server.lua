@@ -1,9 +1,9 @@
-local Config = lib.load("config.config")
+local config = lib.load("config.config")
 local stations = lib.load("config.stations")
 local jerrycan = require "server.jerrycan"
 local InStation = {}
 
-GlobalState:set("fuelPrice", Config.FuelPrice, true)
+GlobalState:set("fuelPrice", config.fuelPrice, true)
 
 ---@description Callbacks
 local function inStation(source)
@@ -53,7 +53,7 @@ end
 RegisterNetEvent("mnr_fuel:server:ElaborateAction", function(purchase, method, total, amount, netId)
 	if not inStation(source) then return end
 
-	local price = purchase == "fuel" and math.ceil(amount * GlobalState.fuelPrice) or Config.JerrycanPrice
+	local price = purchase == "fuel" and math.ceil(amount * GlobalState.fuelPrice) or config.jerrycanPrice
 	local playerMoney = server.GetPlayerMoney(source, method)
 	
 	if playerMoney < price then

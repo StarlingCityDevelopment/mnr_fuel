@@ -1,4 +1,4 @@
-local Config = lib.load("config.config")
+local config = lib.load("config.config")
 local stations = lib.load("config.stations")
 local utils = require "client.utils"
 local state = require "client.state"
@@ -21,8 +21,8 @@ RegisterNetEvent("mnr_fuel:client:TakeNozzle", function(data, pumpType)
 
 	local pump = GetEntityModel(data.entity)
     local pumpCoords = GetEntityCoords(data.entity)
-	local nozzleModel = Config.NozzleType[pumpType].hash
-	local handOffset = Config.NozzleType[pumpType].offsets.hand
+	local nozzleModel = config.nozzleType[pumpType].hash
+	local handOffset = config.nozzleType[pumpType].offsets.hand
 	local lefthand = GetPedBoneIndex(cache.ped, 18905)
 	FuelEntities.nozzle = CreateObject(nozzleModel, 1.0, 1.0, 1.0, true, true, false)
 	AttachEntityToEntity(FuelEntities.nozzle, cache.ped, lefthand, handOffset[1], handOffset[2], handOffset[3], handOffset[4], handOffset[5], handOffset[6], false, true, false, true, 0, true)
@@ -32,7 +32,7 @@ RegisterNetEvent("mnr_fuel:client:TakeNozzle", function(data, pumpType)
         Wait(0)
         RopeLoadTextures()
     end
-	FuelEntities.rope = AddRope(pumpCoords.x, pumpCoords.y, pumpCoords.z, 0.0, 0.0, 0.0, 3.0, Config.RopeType["fv"], 8.0 --[[ DON'T SET TO 0.0!!! GAME CRASH!]], 0.0, 1.0, false, false, false, 1.0, true)
+	FuelEntities.rope = AddRope(pumpCoords.x, pumpCoords.y, pumpCoords.z, 0.0, 0.0, 0.0, 3.0, config.ropeType["fv"], 8.0 --[[ DON'T SET TO 0.0!!! GAME CRASH!]], 0.0, 1.0, false, false, false, 1.0, true)
 	while not FuelEntities.rope do
 		Wait(0)
 	end
@@ -41,10 +41,10 @@ RegisterNetEvent("mnr_fuel:client:TakeNozzle", function(data, pumpType)
 
 	local playerCoords = GetEntityCoords(cache.ped)
 	local nozzlePos = GetEntityCoords(FuelEntities.nozzle)
-	local nozzleOffset = Config.NozzleType[pumpType].offsets.rope
+	local nozzleOffset = config.nozzleType[pumpType].offsets.rope
 	nozzlePos = GetOffsetFromEntityInWorldCoords(FuelEntities.nozzle, nozzleOffset.x, nozzleOffset.y, nozzleOffset.z)
 	local pumpHeading = GetEntityHeading(data.entity)
-	local rotatedPumpOffset = utils.RotateOffset(Config.Pumps[pump].offset, pumpHeading)
+	local rotatedPumpOffset = utils.RotateOffset(config.pumps[pump].offset, pumpHeading)
 	local newPumpCoords = pumpCoords + rotatedPumpOffset
 	AttachEntitiesToRope(FuelEntities.rope, data.entity, FuelEntities.nozzle, newPumpCoords.x, newPumpCoords.y, newPumpCoords.z, nozzlePos.x, nozzlePos.y, nozzlePos.z, length, false, false, nil, nil)
 
@@ -75,7 +75,7 @@ end)
 
 local function SecondaryMenu(purchase, vehicle, amount)
 	if not lib.callback.await("mnr_fuel:server:InStation") then return end
-	local totalCost = (purchase == "fuel") and math.ceil(amount * GlobalState.fuelPrice) or Config.JerrycanPrice
+	local totalCost = (purchase == "fuel") and math.ceil(amount * GlobalState.fuelPrice) or config.jerrycanPrice
 	local vehNetID = (purchase == "fuel") and NetworkGetEntityIsNetworked(vehicle) and VehToNet(vehicle)
 	local cashMoney, bankMoney = lib.callback.await("mnr_fuel:server:GetPlayerMoney", false)
 
@@ -241,6 +241,6 @@ end
 
 target.AddGlobalVehicle()
 
-for model, data in pairs(Config.Pumps) do
+for model, data in pairs(config.pumps) do
 	target.AddModel(model, data.type == "ev")
 end

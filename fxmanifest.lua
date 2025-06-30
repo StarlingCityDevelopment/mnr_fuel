@@ -5,7 +5,7 @@ lua54 "yes"
 name "mnr_fuel"
 description "Fuel System for FiveM"
 author "IlMelons"
-version "1.0.0"
+version "1.1.0"
 repository "https://www.github.com/Monarch-Development/mnr_fuel"
 
 ox_lib "locale"
