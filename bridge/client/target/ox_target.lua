@@ -71,7 +71,9 @@ function target.AddModel(model, isEV)
             canInteract = function()
                 return not state.refueling and (state.holding ~= "fv_nozzle" and state.holding ~= "ev_nozzle")
             end,
-            event = "mnr_fuel:client:BuyJerrycan",
+            onSelect = function(data)
+                TriggerEvent("mnr_fuel:client:BuyJerrycan", data)
+            end,
         },
     })
 end

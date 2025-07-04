@@ -150,7 +150,7 @@ RegisterNetEvent("mnr_fuel:client:RefuelVehicle", function(data)
 end)
 
 RegisterNetEvent("mnr_fuel:client:BuyJerrycan", function(data)
-	if state.refueling and not (state.holding ~= "fv_nozzle" and state.holding ~= "ev_nozzle") then return end
+	if not data.entity or state.refueling and not (state.holding ~= "fv_nozzle" and state.holding ~= "ev_nozzle") then return end
 	if not lib.callback.await("mnr_fuel:server:InStation") then return end
 
 	SecondaryMenu("jerrycan")

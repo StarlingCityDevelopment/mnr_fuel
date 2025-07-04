@@ -75,7 +75,7 @@ function target.AddModel(model, isEV)
                     return not state.refueling and (state.holding ~= "fv_nozzle" and state.holding ~= "ev_nozzle")
                 end,
                 action = function(entity)
-                    TriggerEvent("mnr_fuel:client:BuyJerrycan")
+                    TriggerEvent("mnr_fuel:client:BuyJerrycan", {entity = entity})
                 end,
             },
         },
