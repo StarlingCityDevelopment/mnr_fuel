@@ -5,7 +5,7 @@ local InStation = {}
 
 GlobalState:set("fuelPrice", config.fuelPrice, true)
 
----@description Callbacks
+---@return boolean
 local function inStation(source)
 	local src = source
 	return InStation[src] ~= nil
@@ -13,6 +13,7 @@ end
 
 lib.callback.register("mnr_fuel:server:InStation", inStation)
 
+---@return number, number
 lib.callback.register("mnr_fuel:server:GetPlayerMoney", function(source)
 	local src = source
 	local cashMoney, bankMoney = server.GetPlayerMoney(src)
@@ -20,7 +21,7 @@ lib.callback.register("mnr_fuel:server:GetPlayerMoney", function(source)
 	return cashMoney, bankMoney
 end)
 
----@description Zones Handling
+---@param name string
 RegisterNetEvent("mnr_fuel:server:EnterStation", function(name)
 	local src = source
     local station = stations[name]
@@ -42,6 +43,8 @@ RegisterNetEvent("mnr_fuel:server:ExitStation", function()
     InStation[src] = nil
 end)
 
+---@param netID number
+---@param fuelAmount number
 local function setFuel(netID, fuelAmount)
 	local vehicle = NetworkGetEntityFromNetworkId(netID)
 	if vehicle == 0 or GetEntityType(vehicle) ~= 2 then return end
@@ -54,6 +57,11 @@ local function setFuel(netID, fuelAmount)
 	vehicleState:set("fuel", fuel, true)
 end
 
+---@param purchase string
+---@param method string
+---@param total number
+---@param amount number
+---@param netId number
 RegisterNetEvent("mnr_fuel:server:ElaborateAction", function(purchase, method, total, amount, netId)
 	local src = source
 	if not inStation(src) then return end
