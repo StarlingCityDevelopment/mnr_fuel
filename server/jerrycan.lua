@@ -1,34 +1,37 @@
 local jerrycan = {}
 
 function jerrycan.refill(source, method, price)
-    local item, durability = inventory.GetJerrycan(source)
+    local src = source
+    local item, durability = inventory.GetJerrycan(src)
     if not item or item.name ~= "WEAPON_PETROLCAN" then return end
 
     if durability > 0 then
-        return server.Notify(source, locale("notify.jerrycan-not-empty"), "error")
+        return server.Notify(src, locale("notify.jerrycan-not-empty"), "error")
     end
 
-    if not server.PayMoney(source, method, price) then return end
+    if not server.PayMoney(src, method, price) then return end
 
-    inventory.UpdateJerrycan(source, item, 100)
+    inventory.UpdateJerrycan(src, item, 100)
 end
 
 function jerrycan.buy(source, method, price)
-    if not inventory.CanCarry(source, "WEAPON_PETROLCAN") then
-        return server.Notify(source, locale("notify.not-enough-space"), "error")
+    local src = source
+    if not inventory.CanCarry(src, "WEAPON_PETROLCAN") then
+        return server.Notify(src, locale("notify.not-enough-space"), "error")
     end
 
-    if not server.PayMoney(source, method, price) then return end
+    if not server.PayMoney(src, method, price) then return end
 
-    inventory.AddItem(source, "WEAPON_PETROLCAN", 1)
+    inventory.AddItem(src, "WEAPON_PETROLCAN", 1)
 end
 
 function jerrycan.purchase(source, method, price)
-    local item = inventory.GetJerrycan(source)
+    local src = source
+    local item = inventory.GetJerrycan(src)
     if item and item.name == "WEAPON_PETROLCAN" then
-        return jerrycan.refill(source, method, price)
+        return jerrycan.refill(src, method, price)
     else
-        return jerrycan.buy(source, method, price)
+        return jerrycan.buy(src, method, price)
     end
 end
 

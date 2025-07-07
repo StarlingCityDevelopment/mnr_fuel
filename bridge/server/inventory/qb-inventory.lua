@@ -2,29 +2,32 @@
 
 if GetResourceState("qb-inventory") ~= "started" then return end
 
-local qb_inventory = exports["qb-inventory"]
-
 inventory = {}
 
 function inventory.GetItem(source, itemName)
-    local item = qb_inventory:GetItemByName(source, itemName)
+    local src = source
+    local item = exports["qb-inventory"]:GetItemByName(src, itemName)
     return item
 end
 
 function inventory.CanCarry(source, itemName, amount)
-    local success = qb_inventory:CanAddItem(source, itemName, amount)
+    local src = source
+    local success = exports["qb-inventory"]:CanAddItem(src, itemName, amount)
     return success
 end
 
 function inventory.AddItem(source, itemName, amount, metadata)
-    qb_inventory:AddItem(source, itemName, amount, false, metadata)
+    local src = source
+    exports["qb-inventory"]:AddItem(src, itemName, amount, false, metadata)
 end
 
 function inventory.GetJerrycan(source)
-    local item = qb_inventory:GetItemByName(source, "WEAPON_PETROLCAN")
+    local src = source
+    local item = exports["qb-inventory"]:GetItemByName(src, "WEAPON_PETROLCAN")
     return item, item.info.quality
 end
 
 function inventory.UpdateJerrycan(source, item, newDurability)
-    qb_inventory:SetItemData(source, item.name, "quality", newDurability)
+    local src = source
+    exports["qb-inventory"]:SetItemData(src, item.name, "quality", newDurability)
 end

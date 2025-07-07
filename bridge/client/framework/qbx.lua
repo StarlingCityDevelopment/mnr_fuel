@@ -2,8 +2,6 @@
 
 if GetResourceState("qbx_core") ~= "started" then return end
 
-local QBX = exports.qbx_core
-
 client = {}
 
 function client.Notify(msg, type)

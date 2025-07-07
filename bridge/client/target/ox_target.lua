@@ -3,12 +3,11 @@
 if GetResourceState("ox_target") ~= "started" then return end
 
 local state = require "client.state"
-local ox_target = exports.ox_target
 
 target = {}
 
 function target.AddGlobalVehicle()
-    ox_target:addGlobalVehicle({
+    exports.ox_target:addGlobalVehicle({
         {
             label = locale("target.refuel-nozzle"),
             name = "mnr_fuel:veh_option_1",
@@ -32,11 +31,11 @@ function target.AddGlobalVehicle()
 end
 
 function target.RemoveGlobalVehicle()
-    ox_target:removeGlobalVehicle("mnr_fuel:veh_option")
+    exports.ox_target:removeGlobalVehicle("mnr_fuel:veh_option")
 end
 
 function target.AddModel(model, isEV)
-    ox_target:addModel(model, {
+    exports.ox_target:addModel(model, {
         {
             label = locale(isEV and "target.take-charger" or "target.take-nozzle"),
             name = "mnr_fuel:pump:option_1",

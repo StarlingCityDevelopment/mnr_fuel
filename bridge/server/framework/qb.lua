@@ -7,11 +7,13 @@ local QBCore = exports["qb-core"]:GetCoreObject()
 server = {}
 
 function server.Notify(source, msg, type)
-    TriggerClientEvent("QBCore:Notify", source, msg, type)
+    local src = source
+    TriggerClientEvent("QBCore:Notify", src, msg, type)
 end
 
 function server.GetPlayerMoney(source, account)
-    local Player = QBCore.Functions.GetPlayer(source)
+    local src = source
+    local Player = QBCore.Functions.GetPlayer(src)
 
     local cashMoney = Player.Functions.GetMoney("cash")
     local bankMoney = Player.Functions.GetMoney("bank")
@@ -26,7 +28,8 @@ function server.GetPlayerMoney(source, account)
 end
 
 function server.PayMoney(source, paymentMethod, amount)
-    local Player = QBCore.Functions.GetPlayer(source)
+    local src = source
+    local Player = QBCore.Functions.GetPlayer(src)
     local paymentSuccess = Player.Functions.RemoveMoney(paymentMethod, amount)
 
     return paymentSuccess

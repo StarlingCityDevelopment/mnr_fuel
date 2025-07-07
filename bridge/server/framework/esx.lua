@@ -7,11 +7,13 @@ local ESX = exports["es_extended"]:getSharedObject()
 server = {}
 
 function server.Notify(source, msg, type)
-    TriggerClientEvent("esx:showNotification", source, msg, type)
+    local src = source
+    TriggerClientEvent("esx:showNotification", src, msg, type)
 end
 
 function server.GetPlayerMoney(source, account)
-    local xPlayer = ESX.GetPlayerFromId(source)
+    local src = source
+    local xPlayer = ESX.GetPlayerFromId(src)
     local cashMoney = nil
     local bankMoney = nil
     for _, data in pairs(xPlayer.accounts) do
@@ -27,7 +29,8 @@ function server.GetPlayerMoney(source, account)
 end
 
 function server.PayMoney(source, paymentMethod, amount)
-    local xPlayer = ESX.GetPlayerFromId(source)
+    local src = source
+    local xPlayer = ESX.GetPlayerFromId(src)
     if paymentMethod == "cash" then
         paymentMethod = "money"
     end

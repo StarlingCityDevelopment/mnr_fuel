@@ -3,12 +3,11 @@
 if GetResourceState("qb-target") ~= "started" then return end
 
 local state = require "client.state"
-local qb_target = exports["qb-target"]
 
 target = {}
 
 function target.AddGlobalVehicle()
-    qb_target:AddGlobalVehicle({
+    exports["qb-target"]:AddGlobalVehicle({
         options = {
             {
                 label = locale("target.refuel-nozzle"),
@@ -37,11 +36,11 @@ function target.AddGlobalVehicle()
 end
 
 function target.RemoveGlobalVehicle()
-    qb_target:RemoveGlobalVehicle(locale("target.insert-nozzle"))
+    exports["qb-target"]:RemoveGlobalVehicle(locale("target.insert-nozzle"))
 end
 
 function target.AddModel(model, isEV)
-    qb_target:AddTargetModel(model, {
+    exports["qb-target"]:AddTargetModel(model, {
         options = {
             {
                 num = 1,

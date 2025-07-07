@@ -4,7 +4,7 @@ local utils = require "client.utils"
 local state = require "client.state"
 
 local Blips = {}
-local FuelEntities = {nozzle = nil, rope = nil}
+local FuelEntities = { nozzle = nil, rope = nil }
 
 ---@description TARGET EVENTS
 RegisterNetEvent("mnr_fuel:client:TakeNozzle", function(data, pumpType)
@@ -165,7 +165,7 @@ RegisterNetEvent("mnr_fuel:client:PlayRefuelAnim", function(data, isPump)
 	TaskTurnPedToFaceEntity(cache.ped, vehicle, 500)
 	Wait(500)
 
-	local refuelTime = data.Amount * 2000
+	local refuelTime = data.amount * 2000
 	state:set("refueling", true)
 	local pumpType = state.holding == "fv_nozzle" and "fv" or state.holding == "ev_nozzle" and "ev"
 	local soundId = GetSoundId()

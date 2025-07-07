@@ -2,26 +2,28 @@
 
 if GetResourceState("ox_inventory") ~= "started" then return end
 
-local ox_inventory = exports.ox_inventory
-
 inventory = {}
 
 function inventory.GetItem(source, itemName)
-    local item = ox_inventory:GetItem(source, itemName, nil, false)
+    local src = source
+    local item = exports.ox_inventory:GetItem(src, itemName, nil, false)
     return item
 end
 
 function inventory.CanCarry(source, itemName, amount)
-    local success = ox_inventory:CanCarryItem(source, itemName, amount)
+    local src = source
+    local success = exports.ox_inventory:CanCarryItem(src, itemName, amount)
     return success
 end
 
 function inventory.AddItem(source, itemName, count)
-    ox_inventory:AddItem(source, itemName, count)
+    local src = source
+    exports.ox_inventory:AddItem(src, itemName, count)
 end
 
 function inventory.GetJerrycan(source)
-    local weapon = ox_inventory:GetCurrentWeapon(source)
+    local src = source
+    local weapon = exports.ox_inventory:GetCurrentWeapon(src)
 
     if not weapon then
         return false, false
@@ -32,6 +34,7 @@ function inventory.GetJerrycan(source)
 end
 
 function inventory.UpdateJerrycan(source, item, newDurability)
+    local src = source
     local metadata = {durability = newDurability, ammo = newDurability}
-    ox_inventory:SetMetadata(source, item.slot, metadata)
+    exports.ox_inventory:SetMetadata(src, item.slot, metadata)
 end
