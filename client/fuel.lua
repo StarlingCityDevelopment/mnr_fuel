@@ -40,7 +40,7 @@ local function startFuelConsumption()
 
 				if fuelAmount ~= newFuel then
 					setFuel(vehState, vehicle, newFuel, fuelTick % 15 == 0)
-                	fuelTick = (fuelTick + 1) % 15
+					fuelTick = (fuelTick + 1) % 15
 				end
 			end
 		else
