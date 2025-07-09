@@ -1,17 +1,14 @@
 -- code by (https://github.com/overextended/ox_fuel)
 -- with a little but unwanted simplification (https://github.com/overextended/ox_fuel/pull/110)
 
-local fuel = {LastVehicle = cache.vehicle or GetPlayersLastVehicle()}
-if fuel.LastVehicle == 0 then fuel.LastVehicle = nil end
-
 SetFuelConsumptionState(true)
 SetFuelConsumptionRateMultiplier(10.0)
 
-local function SetFuel(vehState, vehicle, amount, replicate)
-    if DoesEntityExist(vehicle) then
-		SetVehicleFuelLevel(vehicle, amount)
-		vehState:set("fuel", amount, replicate)
-	end
+local function setFuel(vehState, vehicle, amount, replicate)
+    if not DoesEntityExist(vehicle) then return end
+	
+	SetVehicleFuelLevel(vehicle, amount)
+	vehState:set("fuel", amount, replicate)
 end
 
 local function startFuelConsumption()
@@ -42,7 +39,7 @@ local function startFuelConsumption()
 				end
 
 				if fuelAmount ~= newFuel then
-					SetFuel(vehState, vehicle, newFuel, fuelTick % 15 == 0)
+					setFuel(vehState, vehicle, newFuel, fuelTick % 15 == 0)
                 	fuelTick = (fuelTick + 1) % 15
 				end
 			end
@@ -52,16 +49,12 @@ local function startFuelConsumption()
 		end
 		Wait(1000)
 	end
-	SetFuel(vehState, vehicle, vehState.fuel, true)
+	setFuel(vehState, vehicle, vehState.fuel, true)
 end
 
 if cache.seat == -1 then CreateThread(startFuelConsumption) end
 
 lib.onCache("seat", function(seat)
-    if cache.vehicle then
-        fuel.LastVehicle = cache.vehicle
-    end
-
     if seat == -1 then
         SetTimeout(0, startFuelConsumption)
     end
