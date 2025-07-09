@@ -8,3 +8,4 @@ Script born from the fusion of the feature-rich script [cdn-fuel](https://github
 
 ## Links
 - [Discord](https://discord.gg/WKtk65yBC6)
+- [Documentation](https://monarch-docs.ricodev.it/docs/monarch-resources/mnr_fuel)
