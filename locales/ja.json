@@ -1,0 +1,40 @@
+{
+    "blips": {
+        "name-fuel": "ガソリンスタンド",
+        "name-ev": "EVステーション"
+    },
+    "target": {
+        "refuel-nozzle": "ノズルを挿入",
+        "refuel-jerrycan": "給油（携行缶）",
+        "take-nozzle": "ノズルを取る",
+        "take-charger": "充電器を取る",
+        "return-nozzle": "ノズルを戻す",
+        "return-charger": "充電器を戻す",
+        "buy-jerrycan": "携行缶を購入/補充"
+    },
+    "input": {
+        "select-amount": "数量を選択"
+    },
+    "menu": {
+        "confirm-title": "合計金額は税込で %d$ です。",
+        "confirm-choice-title": "確認",
+        "cancel-choice-title": "キャンセル",
+        "payment-title": "支払い方法を選択 (%d$)",
+        "payment-bank": "銀行",
+        "payment-bank-desc": "銀行口座に %s$ あります。",
+        "payment-cash": "現金",
+        "payment-cash-desc": "所持金は %s$ です。"
+    },
+    "progress": {
+        "refueling-vehicle": "車両に給油中..."
+    },
+    "notify": {
+        "not-ev": "この車両は電気自動車ではありません",
+        "not-fv": "この車両は燃料を使用しません",
+        "not-enough-money": "お金が足りません",
+        "not-enough-space": "スペースが足りません",
+        "jerrycan-not-empty": "携行缶が空ではありません",
+        "vehicle-full": "車両はすでに満タンです",
+        "refuel-success": "車両に正常に給油されました"
+    }
+}

@@ -1,0 +1,40 @@
+{
+    "blips": {
+        "name-fuel": "Posto de Gasolina",
+        "name-ev": "Estação de EV"
+    },
+    "target": {
+        "refuel-nozzle": "Inserir Bico",
+        "refuel-jerrycan": "Abastecer (Galão)",
+        "take-nozzle": "Pegar Bico",
+        "take-charger": "Pegar Carregador",
+        "return-nozzle": "Devolver Bico",
+        "return-charger": "Devolver Carregador",
+        "buy-jerrycan": "Comprar/Reabastecer Galão"
+    },
+    "input": {
+        "select-amount": "Selecionar Quantidade"
+    },
+    "menu": {
+        "confirm-title": "O custo total é: %d$ incluindo impostos.",
+        "confirm-choice-title": "Confirmar",
+        "cancel-choice-title": "Cancelar",
+        "payment-title": "Escolha o método de pagamento (%d$)",
+        "payment-bank": "Banco",
+        "payment-bank-desc": "Você tem %s$ na sua conta bancária.",
+        "payment-cash": "Dinheiro",
+        "payment-cash-desc": "Você tem %s$ em dinheiro."
+    },
+    "progress": {
+        "refueling-vehicle": "Abastecendo veículo..."
+    },
+    "notify": {
+        "not-ev": "O veículo não é elétrico",
+        "not-fv": "O veículo não usa combustível",
+        "not-enough-money": "Você não tem dinheiro suficiente",
+        "not-enough-space": "Você não tem espaço suficiente",
+        "jerrycan-not-empty": "O galão não está vazio",
+        "vehicle-full": "O veículo já está cheio",
+        "refuel-success": "Você abasteceu o veículo com sucesso"
+    }
+}

@@ -1,0 +1,40 @@
+{
+    "blips": {
+        "name-fuel": "Stație de Carburanți",
+        "name-ev": "Stație EV"
+    },
+    "target": {
+        "refuel-nozzle": "Introduceți Duza",
+        "refuel-jerrycan": "Realimentare (Bidon)",
+        "take-nozzle": "Ia Duza",
+        "take-charger": "Ia Încărcătorul",
+        "return-nozzle": "Returnează Duza",
+        "return-charger": "Returnează Încărcătorul",
+        "buy-jerrycan": "Cumpără/Completează Bidon"
+    },
+    "input": {
+        "select-amount": "Selectați Cantitatea"
+    },
+    "menu": {
+        "confirm-title": "Costul total este: %d$ inclusiv taxe.",
+        "confirm-choice-title": "Confirmă",
+        "cancel-choice-title": "Anulează",
+        "payment-title": "Alege Metoda de Plată (%d$)",
+        "payment-bank": "Banca",
+        "payment-bank-desc": "Ai %s$ în contul bancar.",
+        "payment-cash": "Numerar",
+        "payment-cash-desc": "Ai %s$ în numerar."
+    },
+    "progress": {
+        "refueling-vehicle": "Realimentare vehicul..."
+    },
+    "notify": {
+        "not-ev": "Vehiculul nu este electric",
+        "not-fv": "Vehiculul nu folosește combustibil",
+        "not-enough-money": "Nu ai suficienți bani",
+        "not-enough-space": "Nu ai suficient spațiu",
+        "jerrycan-not-empty": "Bidonul nu este gol",
+        "vehicle-full": "Vehiculul este deja plin",
+        "refuel-success": "Ai realimentat vehiculul cu succes"
+    }
+}

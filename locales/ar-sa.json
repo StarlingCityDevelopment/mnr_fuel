@@ -1,0 +1,40 @@
+{
+    "blips": {
+        "name-fuel": "محطة وقود",
+        "name-ev": "محطة شحن كهربائية"
+    },
+    "target": {
+        "refuel-nozzle": "أدخل الفوهة",
+        "refuel-jerrycan": "تزويد الوقود (جركن)",
+        "take-nozzle": "أمسك الفوهة",
+        "take-charger": "أمسك الشاحن",
+        "return-nozzle": "إرجاع الفوهة",
+        "return-charger": "إرجاع الشاحن",
+        "buy-jerrycan": "شراء/تعبئة الجركن"
+    },
+    "input": {
+        "select-amount": "اختر الكمية"
+    },
+    "menu": {
+        "confirm-title": "التكلفة الإجمالية هي: %d$ شامل الضرائب.",
+        "confirm-choice-title": "تأكيد",
+        "cancel-choice-title": "إلغاء",
+        "payment-title": "اختر طريقة الدفع (%d$)",
+        "payment-bank": "البنك",
+        "payment-bank-desc": "لديك %s$ في حسابك البنكي.",
+        "payment-cash": "نقداً",
+        "payment-cash-desc": "لديك %s$ نقداً."
+    },
+    "progress": {
+        "refueling-vehicle": "جارٍ تعبئة الوقود..."
+    },
+    "notify": {
+        "not-ev": "السيارة ليست كهربائية",
+        "not-fv": "السيارة لا تستخدم وقودًا",
+        "not-enough-money": "ليس لديك ما يكفي من المال",
+        "not-enough-space": "ليس لديك مساحة كافية",
+        "jerrycan-not-empty": "الجركن غير فارغ",
+        "vehicle-full": "السيارة ممتلئة بالفعل",
+        "refuel-success": "تمت تعبئة الوقود بنجاح"
+    }
+}

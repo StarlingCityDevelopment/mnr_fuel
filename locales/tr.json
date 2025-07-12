@@ -1,0 +1,40 @@
+{
+    "blips": {
+        "name-fuel": "Benzin İstasyonu",
+        "name-ev": "Elektrikli Araç İstasyonu"
+    },
+    "target": {
+        "refuel-nozzle": "Nozülü Tak",
+        "refuel-jerrycan": "Yakıt Doldur (Jerrycan)",
+        "take-nozzle": "Nozülü Al",
+        "take-charger": "Şarj Cihazını Al",
+        "return-nozzle": "Nozülü Geri Ver",
+        "return-charger": "Şarj Cihazını Geri Ver",
+        "buy-jerrycan": "Jerrycan Satın Al/Doldur"
+    },
+    "input": {
+        "select-amount": "Miktar Seç"
+    },
+    "menu": {
+        "confirm-title": "Toplam tutar: %d$ (vergiler dahil).",
+        "confirm-choice-title": "Onayla",
+        "cancel-choice-title": "İptal",
+        "payment-title": "Ödeme Yöntemi Seç (%d$)",
+        "payment-bank": "Banka",
+        "payment-bank-desc": "Banka hesabınızda %s$ var.",
+        "payment-cash": "Nakit",
+        "payment-cash-desc": "Yanınızda %s$ nakit var."
+    },
+    "progress": {
+        "refueling-vehicle": "Araç yakıt dolduruluyor..."
+    },
+    "notify": {
+        "not-ev": "Araç elektrikli değil",
+        "not-fv": "Araç yakıt kullanmıyor",
+        "not-enough-money": "Yeterli paranız yok",
+        "not-enough-space": "Yeterli alanınız yok",
+        "jerrycan-not-empty": "Jerrycan boş değil",
+        "vehicle-full": "Araç zaten dolu",
+        "refuel-success": "Aracınızı başarıyla doldurdunuz"
+    }
+}

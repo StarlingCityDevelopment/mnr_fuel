@@ -1,0 +1,40 @@
+{
+    "blips": {
+        "name-fuel": "Station-service",
+        "name-ev": "Station électrique"
+    },
+    "target": {
+        "refuel-nozzle": "Insérer le pistolet",
+        "refuel-jerrycan": "Faire le plein (jerrican)",
+        "take-nozzle": "Prendre le pistolet",
+        "take-charger": "Prendre le chargeur",
+        "return-nozzle": "Ranger le pistolet",
+        "return-charger": "Ranger le chargeur",
+        "buy-jerrycan": "Acheter/Recharger un jerrican"
+    },
+    "input": {
+        "select-amount": "Sélectionner la quantité"
+    },
+    "menu": {
+        "confirm-title": "Le coût total est de : %d$ taxes comprises.",
+        "confirm-choice-title": "Confirmer",
+        "cancel-choice-title": "Annuler",
+        "payment-title": "Choisissez un mode de paiement (%d$)",
+        "payment-bank": "Banque",
+        "payment-bank-desc": "Vous avez %s$ sur votre compte bancaire.",
+        "payment-cash": "Espèces",
+        "payment-cash-desc": "Vous avez %s$ en espèces."
+    },
+    "progress": {
+        "refueling-vehicle": "Ravitaillement du véhicule..."
+    },
+    "notify": {
+        "not-ev": "Le véhicule n'est pas électrique",
+        "not-fv": "Le véhicule n'utilise pas de carburant",
+        "not-enough-money": "Vous n'avez pas assez d'argent",
+        "not-enough-space": "Vous n'avez pas assez de place",
+        "jerrycan-not-empty": "Le jerrican n'est pas vide",
+        "vehicle-full": "Le véhicule est déjà plein",
+        "refuel-success": "Vous avez ravitaillé le véhicule avec succès"
+    }
+}

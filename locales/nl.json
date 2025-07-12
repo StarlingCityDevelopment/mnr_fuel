@@ -1,0 +1,40 @@
+{
+    "blips": {
+        "name-fuel": "Tankstation",
+        "name-ev": "Laadstation"
+    },
+    "target": {
+        "refuel-nozzle": "Plaats het mondstuk",
+        "refuel-jerrycan": "Tanken (Jerrycan)",
+        "take-nozzle": "Pak het mondstuk",
+        "take-charger": "Pak de lader",
+        "return-nozzle": "Mondstuk terugplaatsen",
+        "return-charger": "Lader terugplaatsen",
+        "buy-jerrycan": "Jerrycan kopen/bijvullen"
+    },
+    "input": {
+        "select-amount": "Selecteer hoeveelheid"
+    },
+    "menu": {
+        "confirm-title": "De totale kosten zijn: %d$, inclusief belastingen.",
+        "confirm-choice-title": "Bevestigen",
+        "cancel-choice-title": "Annuleren",
+        "payment-title": "Kies een betaalmethode (%d$)",
+        "payment-bank": "Bank",
+        "payment-bank-desc": "Je hebt %s$ op je bankrekening.",
+        "payment-cash": "Contant",
+        "payment-cash-desc": "Je hebt %s$ contant geld."
+    },
+    "progress": {
+        "refueling-vehicle": "Voertuig wordt getankt..."
+    },
+    "notify": {
+        "not-ev": "Het voertuig is niet elektrisch",
+        "not-fv": "Het voertuig gebruikt geen brandstof",
+        "not-enough-money": "Je hebt niet genoeg geld",
+        "not-enough-space": "Je hebt niet genoeg ruimte",
+        "jerrycan-not-empty": "De jerrycan is niet leeg",
+        "vehicle-full": "Het voertuig is al vol",
+        "refuel-success": "Het voertuig is succesvol getankt"
+    }
+}

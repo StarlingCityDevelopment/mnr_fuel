@@ -1,0 +1,40 @@
+{
+    "blips": {
+        "name-fuel": "Tankstation",
+        "name-ev": "Ladestation"
+    },
+    "target": {
+        "refuel-nozzle": "Indsæt tankpistol",
+        "refuel-jerrycan": "Tank op (dunk)",
+        "take-nozzle": "Tag tankpistol",
+        "take-charger": "Tag oplader",
+        "return-nozzle": "Returnér tankpistol",
+        "return-charger": "Returnér oplader",
+        "buy-jerrycan": "Køb/genopfyld dunk"
+    },
+    "input": {
+        "select-amount": "Vælg mængde"
+    },
+    "menu": {
+        "confirm-title": "Den samlede pris er: %d$ inkl. moms.",
+        "confirm-choice-title": "Bekræft",
+        "cancel-choice-title": "Annuller",
+        "payment-title": "Vælg betalingsmetode (%d$)",
+        "payment-bank": "Bank",
+        "payment-bank-desc": "Du har %s$ på din bankkonto.",
+        "payment-cash": "Kontant",
+        "payment-cash-desc": "Du har %s$ i kontanter."
+    },
+    "progress": {
+        "refueling-vehicle": "Tanker køretøj..."
+    },
+    "notify": {
+        "not-ev": "Køretøjet er ikke elektrisk",
+        "not-fv": "Køretøjet bruger ikke brændstof",
+        "not-enough-money": "Du har ikke nok penge",
+        "not-enough-space": "Du har ikke nok plads",
+        "jerrycan-not-empty": "Dunken er ikke tom",
+        "vehicle-full": "Køretøjet er allerede fyldt op",
+        "refuel-success": "Du har tanket køretøjet med succes"
+    }
+}

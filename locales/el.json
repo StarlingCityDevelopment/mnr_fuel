@@ -1,0 +1,40 @@
+{
+    "blips": {
+        "name-fuel": "Βενζινάδικο",
+        "name-ev": "Σταθμός Φόρτισης"
+    },
+    "target": {
+        "refuel-nozzle": "Εισάγετε το ακροφύσιο",
+        "refuel-jerrycan": "Ανεφοδιασμός (Γκαζάκι)",
+        "take-nozzle": "Πάρε το ακροφύσιο",
+        "take-charger": "Πάρε τον φορτιστή",
+        "return-nozzle": "Επιστροφή ακροφυσίου",
+        "return-charger": "Επιστροφή φορτιστή",
+        "buy-jerrycan": "Αγορά/Γέμισμα Γκαζιού"
+    },
+    "input": {
+        "select-amount": "Επιλογή ποσότητας"
+    },
+    "menu": {
+        "confirm-title": "Το συνολικό κόστος είναι: %d$ με φόρους.",
+        "confirm-choice-title": "Επιβεβαίωση",
+        "cancel-choice-title": "Ακύρωση",
+        "payment-title": "Επιλέξτε μέθοδο πληρωμής (%d$)",
+        "payment-bank": "Τράπεζα",
+        "payment-bank-desc": "Έχετε %s$ στον τραπεζικό σας λογαριασμό.",
+        "payment-cash": "Μετρητά",
+        "payment-cash-desc": "Έχετε %s$ σε μετρητά."
+    },
+    "progress": {
+        "refueling-vehicle": "Ανεφοδιασμός οχήματος..."
+    },
+    "notify": {
+        "not-ev": "Το όχημα δεν είναι ηλεκτρικό",
+        "not-fv": "Το όχημα δεν χρησιμοποιεί καύσιμο",
+        "not-enough-money": "Δεν έχετε αρκετά χρήματα",
+        "not-enough-space": "Δεν έχετε αρκετό χώρο",
+        "jerrycan-not-empty": "Το γκαζάκι δεν είναι άδειο",
+        "vehicle-full": "Το όχημα είναι ήδη γεμάτο",
+        "refuel-success": "Ανεφοδιάσατε το όχημα με επιτυχία"
+    }
+}

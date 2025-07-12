@@ -1,0 +1,40 @@
+{
+    "blips": {
+        "name-fuel": "Degalinė",
+        "name-ev": "Įkrovimo stotis"
+    },
+    "target": {
+        "refuel-nozzle": "Įdėkite pistoletą",
+        "refuel-jerrycan": "Pildyti (kanistras)",
+        "take-nozzle": "Paimti pistoletą",
+        "take-charger": "Paimti įkroviklį",
+        "return-nozzle": "Grąžinti pistoletą",
+        "return-charger": "Grąžinti įkroviklį",
+        "buy-jerrycan": "Pirkti / Pripildyti kanistrą"
+    },
+    "input": {
+        "select-amount": "Pasirinkite kiekį"
+    },
+    "menu": {
+        "confirm-title": "Bendra kaina: %d$ su mokesčiais.",
+        "confirm-choice-title": "Patvirtinti",
+        "cancel-choice-title": "Atšaukti",
+        "payment-title": "Pasirinkite mokėjimo būdą (%d$)",
+        "payment-bank": "Bankas",
+        "payment-bank-desc": "Jūsų banko sąskaitoje yra %s$.",
+        "payment-cash": "Grynieji",
+        "payment-cash-desc": "Turite %s$ grynaisiais."
+    },
+    "progress": {
+        "refueling-vehicle": "Pildomas kuras..."
+    },
+    "notify": {
+        "not-ev": "Transporto priemonė nėra elektrinė",
+        "not-fv": "Transporto priemonė nenaudoja kuro",
+        "not-enough-money": "Jums nepakanka pinigų",
+        "not-enough-space": "Nepakanka vietos",
+        "jerrycan-not-empty": "Kanistras nėra tuščias",
+        "vehicle-full": "Transporto priemonė jau pilna",
+        "refuel-success": "Transporto priemonė sėkmingai pripildyta"
+    }
+}

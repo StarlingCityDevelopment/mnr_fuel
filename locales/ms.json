@@ -1,0 +1,40 @@
+{
+    "blips": {
+        "name-fuel": "Stesen Minyak",
+        "name-ev": "Stesen EV"
+    },
+    "target": {
+        "refuel-nozzle": "Masukkan muncung",
+        "refuel-jerrycan": "Isi minyak (Jerrycan)",
+        "take-nozzle": "Ambil muncung",
+        "take-charger": "Ambil pengecas",
+        "return-nozzle": "Pulangkan muncung",
+        "return-charger": "Pulangkan pengecas",
+        "buy-jerrycan": "Beli/Isikan Jerrycan"
+    },
+    "input": {
+        "select-amount": "Pilih jumlah"
+    },
+    "menu": {
+        "confirm-title": "Jumlah keseluruhan ialah: %d$ termasuk cukai.",
+        "confirm-choice-title": "Sahkan",
+        "cancel-choice-title": "Batal",
+        "payment-title": "Pilih Kaedah Pembayaran (%d$)",
+        "payment-bank": "Bank",
+        "payment-bank-desc": "Anda mempunyai %s$ dalam akaun bank anda.",
+        "payment-cash": "Tunai",
+        "payment-cash-desc": "Anda mempunyai %s$ dalam bentuk tunai."
+    },
+    "progress": {
+        "refueling-vehicle": "Sedang mengisi minyak kenderaan..."
+    },
+    "notify": {
+        "not-ev": "Kenderaan ini bukan elektrik",
+        "not-fv": "Kenderaan ini tidak menggunakan bahan api",
+        "not-enough-money": "Anda tidak mempunyai wang yang mencukupi",
+        "not-enough-space": "Anda tidak mempunyai ruang yang mencukupi",
+        "jerrycan-not-empty": "Jerrycan tidak kosong",
+        "vehicle-full": "Kenderaan sudah penuh",
+        "refuel-success": "Anda berjaya mengisi minyak kenderaan"
+    }
+}
