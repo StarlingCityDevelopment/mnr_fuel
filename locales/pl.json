@@ -1,0 +1,40 @@
+{
+    "blips": {
+        "name-fuel": "Stacja Benzynowa",
+        "name-ev": "Stacja Ładowania EV"
+    },
+    "target": {
+        "refuel-nozzle": "Włóż Pistolet",
+        "refuel-jerrycan": "Napełnij (Kanister)",
+        "take-nozzle": "Weź Pistolet",
+        "take-charger": "Weź Ładowarkę",
+        "return-nozzle": "Odłóż Pistolet",
+        "return-charger": "Odłóż Ładowarkę",
+        "buy-jerrycan": "Kup/Uzupełnij Kanister"
+    },
+    "input": {
+        "select-amount": "Wybierz Ilość"
+    },
+    "menu": {
+        "confirm-title": "Całkowity koszt to: %d$ z podatkiem.",
+        "confirm-choice-title": "Potwierdź",
+        "cancel-choice-title": "Anuluj",
+        "payment-title": "Wybierz Metodę Płatności (%d$)",
+        "payment-bank": "Bank",
+        "payment-bank-desc": "Masz %s$ na koncie bankowym.",
+        "payment-cash": "Gotówka",
+        "payment-cash-desc": "Masz %s$ w gotówce."
+    },
+    "progress": {
+        "refueling-vehicle": "Tankowanie pojazdu..."
+    },
+    "notify": {
+        "not-ev": "Pojazd nie jest elektryczny",
+        "not-fv": "Pojazd nie używa paliwa",
+        "not-enough-money": "Nie masz wystarczająco pieniędzy",
+        "not-enough-space": "Nie masz wystarczająco miejsca",
+        "jerrycan-not-empty": "Kanister nie jest pusty",
+        "vehicle-full": "Pojazd jest już zatankowany",
+        "refuel-success": "Pojazd został pomyślnie zatankowany"
+    }
+}
