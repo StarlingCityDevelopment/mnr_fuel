@@ -11,7 +11,7 @@ return {
         },
     },
     ropeType = { -- Options: 1-2-3-4-5; 1: Khaki Color, Kind of Thick, 2: Very Thick Khaki Rope, 3: Very Thick Black Rope, 4: Very Thin Black Rope, 5: Same as 3
-        ["fv"] = 1,
+        ["fv"] = 3,
         ["ev"] = 1,
     },
     pumps = {
