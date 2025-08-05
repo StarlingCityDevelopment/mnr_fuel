@@ -14,7 +14,11 @@ local function inside(coords, name)
         return false
     end
 
-    local relative = coords - zone.coords
+    local relative = vector3(
+		coords.x - zone.coords.x,
+		coords.y - zone.coords.y,
+		coords.z - zone.coords.z
+	)
     local heading = zone.rotation or 0.0
 
     local rad = math.rad(-heading)
