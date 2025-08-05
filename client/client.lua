@@ -1,9 +1,7 @@
 local config = lib.load("config.config")
-local stations = lib.load("config.stations")
 local utils = require "client.utils"
 local state = require "client.state"
 
-local Blips = {}
 local FuelEntities = { nozzle = nil, rope = nil }
 
 ---@description TARGET EVENTS
@@ -149,6 +147,20 @@ RegisterNetEvent("mnr_fuel:client:RefuelVehicle", function(data)
 	SecondaryMenu("fuel", data.entity, fuelAmount)
 end)
 
+RegisterNetEvent("mnr_fuel:client:RefuelVehicleFromJerrycan", function(data)
+	if not data.entity or state.refueling and not state.holding == "jerrycan" then return end
+
+	local vehicle = data.entity
+	local vehState = Entity(vehicle).state
+	if not vehState.fuel then
+		utils.InitFuelState(vehicle)
+	end
+
+	local netId = NetworkGetEntityIsNetworked(vehicle) and VehToNet(vehicle)
+
+	TriggerServerEvent("mnr_fuel:server:RefuelVehicle", netId)
+end)
+
 RegisterNetEvent("mnr_fuel:client:BuyJerrycan", function(data)
 	if not data.entity or state.refueling and not (state.holding ~= "fv_nozzle" and state.holding ~= "ev_nozzle") then return end
 	if not lib.callback.await("mnr_fuel:server:InStation") then return end
@@ -209,35 +221,10 @@ AddEventHandler("onResourceStop", function(resourceName)
 	utils.DeleteFuelEntities(FuelEntities.nozzle, FuelEntities.rope)
 
 	target.RemoveGlobalVehicle()
-
-	for _, blip in pairs(Blips) do
-		RemoveBlip(blip)
-	end
 end)
-
----@description INITIALIZATION FUNCTIONS
-local function CreateStation(name, data)
-	lib.zones.sphere({
-		coords = data.coords,
-		radius = data.radius,
-		onEnter = function(self)
-			TriggerServerEvent("mnr_fuel:server:EnterStation", name)
-		end,
-		onExit = function(self)
-			TriggerServerEvent("mnr_fuel:server:ExitStation")
-		end,
-		debug = data.debug,
-	})
-
-	Blips[name] = utils.CreateBlip(data.coords, data.type == "ev")
-end
 
 ---@description INITIALIZATION
 state:init()
-
-for name, data in pairs(stations) do
-	CreateStation(name, data)
-end
 
 target.AddGlobalVehicle()
 
