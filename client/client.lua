@@ -1,10 +1,13 @@
 local config = lib.load('config.config')
+local nozzles = require 'config.nozzles'
+local pumps = require 'config.pumps'
 local utils = require 'client.utils'
 
 ---@description ENTITIES (INTERACTION)
 local refueling = false
-local holding = false
-local Entities = { nozzle = nil, rope = nil }
+local holding = { item = nil, cat = nil }
+local Entities = { nozzle = nil }
+local RopesRegistry = {}
 
 ---@description HELPERS (INTERACTION)
 local function holdingItem(item)
@@ -26,25 +29,51 @@ local function rotateOffset(offset, heading)
     return vec3(newX, newY, offset.z)
 end
 
-local function deleteEntities(nozzle, rope)
+local function deleteEntities(nozzle)
     DeleteObject(nozzle)
-    RopeUnloadTextures()
-    DeleteRope(rope)
 end
 
----@description SECURE ROPE UNLOAD LOOP (INTERACTION)
-local function ropeLoop()
-	local playerCoords = GetEntityCoords(cache.ped)
-	while holdingItem('nozzle') do
-		local currentcoords = GetEntityCoords(cache.ped)
-		local dist = #(playerCoords - currentcoords)
-		if dist > 7.5 then
-			holding = false
-			deleteEntities(Entities.nozzle, Entities.rope)
-		end
-		Wait(1000)
+AddStateBagChangeHandler('used', nil, function(bagName, _, value, _, replicated)
+	if not replicated then return end
+
+    local entity = GetEntityFromStateBagName(bagName)
+    if not DoesEntityExist(entity) then return end
+
+    if value == nil and RopesRegistry[entity] and DoesRopeExist(RopesRegistry[entity]) then
+		DeleteRope(RopesRegistry[entity])
+		RopeUnloadTextures()
+        RopesRegistry[entity] = nil
+		return
+    end
+
+	RopeLoadTextures()
+	while not RopeAreTexturesLoaded() do
+	    Wait(0)
+	    RopeLoadTextures()
 	end
-end
+
+	local pumpCoords = GetEntityCoords(entity)
+	local rope = AddRope(pumpCoords.x, pumpCoords.y, pumpCoords.z, 0.0, 0.0, 0.0, 3.0, 1, 8.0, 0.0, 1.0, false, false, false, 1.0, true)
+	RopesRegistry[entity] = rope
+
+	while not rope do
+		Wait(0)
+	end
+
+	ActivatePhysics(rope)
+
+	local hash = GetEntityModel(entity)
+	local cat = pumps[hash].cat
+	local pumpOffset = pumps[hash].offset
+	local nozzle = NetworkGetEntityFromNetworkId(value)
+	local offset = nozzles[cat].offsets.rope
+	local nozzleCoords = GetOffsetFromEntityInWorldCoords(nozzle, offset.x, offset.y, offset.z)
+	local heading = GetEntityHeading(entity)
+	local rotatedPumpOffset = rotateOffset(pumpOffset, heading)
+	local coords = pumpCoords + rotatedPumpOffset
+
+	AttachEntitiesToRope(rope, entity, nozzle, coords.x, coords.y, coords.z, nozzleCoords.x, nozzleCoords.y, nozzleCoords.z, 8.0, false, false, nil, nil)
+end)
 
 ---@description TARGET FUNCTIONS (INTERACTION)
 local function takeNozzle(data, cat)
@@ -52,46 +81,46 @@ local function takeNozzle(data, cat)
 	if refueling or holdingItem('nozzle') or holdingItem('jerrycan') then return end
 	if not lib.callback.await('mnr_fuel:server:InStation') then return end
 
+	if Entity(data.entity).state.used then return end
+
 	lib.requestAnimDict('anim@am_hold_up@male', 300)
 	lib.requestAudioBank('audiodirectory/mnr_fuel')
 	PlaySoundFromEntity(-1, 'mnr_take_fv_nozzle', data.entity, 'mnr_fuel', true, 0)
-	TaskPlayAnim(cache.ped, 'anim@am_hold_up@male', 'shoplift_high', 2.0, 8.0, -1, 50, 0, 0, 0, 0)
+	TaskPlayAnim(cache.ped, 'anim@am_hold_up@male', 'shoplift_high', 2.0, 8.0, -1, 50, 0, false, false, false)
 	Wait(300)
 	StopAnimTask(cache.ped, 'anim@am_hold_up@male', 'shoplift_high', 1.0)
 	RemoveAnimDict('anim@am_hold_up@male')
 
-	local hand = config.nozzleType[cat].offsets.hand
+	local hand = nozzles[cat].offsets.hand
 	local bone = GetPedBoneIndex(cache.ped, 18905)
-	Entities.nozzle = CreateObject(config.nozzleType[cat].nozzle, 1.0, 1.0, 1.0, true, true, false)
+	Entities.nozzle = CreateObject(nozzles[cat].nozzle, 1.0, 1.0, 1.0, true, true, false)
+	NetworkRegisterEntityAsNetworked(Entities.nozzle)
+
 	AttachEntityToEntity(Entities.nozzle, cache.ped, bone, hand[1], hand[2], hand[3], hand[4], hand[5], hand[6], false, true, false, true, 0, true)
 
-    RopeLoadTextures()
-    while not RopeAreTexturesLoaded() do
-        Wait(0)
-        RopeLoadTextures()
-    end
-
-	local pump = GetEntityCoords(data.entity)
-	Entities.rope = AddRope(pump.x, pump.y, pump.z, 0.0, 0.0, 0.0, 3.0, config.ropeType['fv'], 8.0, 0.0, 1.0, false, false, false, 1.0, true)
-
-	while not Entities.rope do
-		Wait(0)
+	if NetworkGetEntityIsLocal(data.entity) then
+		NetworkRegisterEntityAsNetworked(data.entity)
 	end
-	ActivatePhysics(Entities.rope)
-	Wait(100)
 
-	local offset = config.nozzleType[cat].offsets.rope
-	local nozzle = GetOffsetFromEntityInWorldCoords(Entities.nozzle, offset.x, offset.y, offset.z)
-	
-	local heading = GetEntityHeading(data.entity)
-	local hash = GetEntityModel(data.entity)
-	local rotatedPumpOffset = rotateOffset(config.pumps[hash].offset, heading)
-	local coords = pump + rotatedPumpOffset
-	AttachEntitiesToRope(Entities.rope, data.entity, Entities.nozzle, coords.x, coords.y, coords.z, nozzle.x, nozzle.y, nozzle.z, length, false, false, nil, nil)
+	local nozzle = NetworkGetEntityIsNetworked(Entities.nozzle) and NetworkGetNetworkIdFromEntity(Entities.nozzle)
+	Entity(data.entity).state:set('used', nozzle, true)
 
 	holding = { item = 'nozzle', cat = cat }
 
-	CreateThread(ropeLoop)
+	CreateThread(function()
+		local playerCoords = GetEntityCoords(cache.ped)
+		while holdingItem('nozzle') do
+			local currentcoords = GetEntityCoords(cache.ped)
+			local distance = #(playerCoords - currentcoords)
+			if distance > 7.5 then
+				Entity(data.entity).state:set('used', nil, true)
+				holding = { item = nil, cat = nil }
+				deleteEntities(Entities.nozzle)
+				NetworkUnregisterNetworkedEntity(data.entity)
+			end
+			Wait(1000)
+		end
+	end)
 end
 
 local function returnNozzle(data, cat)
@@ -99,9 +128,11 @@ local function returnNozzle(data, cat)
 
 	lib.requestAudioBank('audiodirectory/mnr_fuel')
 	PlaySoundFromEntity(-1, ('mnr_return_%s_nozzle'):format(cat), data.entity, 'mnr_fuel', true, 0)
-	holding = false
-	Wait(250)
-	deleteEntities(Entities.nozzle, Entities.rope)
+
+	Entity(data.entity).state:set('used', nil, true)
+	holding = { item = nil, cat = nil }
+	deleteEntities(Entities.nozzle)
+	NetworkUnregisterNetworkedEntity(data.entity)
 end
 
 local function inputDialog(jerrycan, cash, bank, fuel)
@@ -198,7 +229,6 @@ local function refuelVehicle(data)
 	end
 
     if not lib.callback.await('mnr_fuel:server:InStation') then return end
-
     if refueling and not holdingItem('nozzle') then return end
 
     local electric = GetIsVehicleElectric(GetEntityModel(vehicle))
@@ -215,40 +245,27 @@ local function refuelVehicle(data)
 
 	local method = input[2]
     local amount = tonumber(input[3]) - fuel
-    if not amount or amount <= 0 then
-		return
-	end
+    if not amount or amount <= 0 then return end
 
 	playAnim({ action = 'fuel', vehicle = vehicle, method = method, amount = amount })
 end
 
 lib.onCache('weapon', function(weapon)
     if weapon ~= `WEAPON_PETROLCAN` and holding ~= false then
-        holding = false
+        holding = { item = nil, cat = nil }
     elseif weapon == `WEAPON_PETROLCAN` then
         holding = { item = 'jerrycan' }
     end
 end)
 
 local function buyJerrycan(data)
-	if not DoesEntityExist(data.entity) then
-		return
-	end
-
-	if refueling or holdingItem('nozzle') then
-		return
-	end
-
-	if not lib.callback.await('mnr_fuel:server:InStation') then
-		return
-	end
+	if not DoesEntityExist(data.entity) then return end
+	if refueling or holdingItem('nozzle') then return end
+	if not lib.callback.await('mnr_fuel:server:InStation') then return end
 
 	local cash, bank = lib.callback.await('mnr_fuel:server:GetPlayerMoney', false)
 	local input = inputDialog(true, cash, bank)
-	
-	if not input then
-		return
-	end
+	if not input then return end
 
 	local method = input[2]
 	TriggerServerEvent('mnr_fuel:server:JerrycanPurchase', method)
@@ -316,7 +333,7 @@ AddEventHandler('onResourceStop', function(resourceName)
 	local scriptName = cache.resource or GetCurrentResourceName()
 	if resourceName ~= scriptName then return end
 
-	deleteEntities(Entities.nozzle, Entities.rope)
+	deleteEntities(Entities.nozzle)
 
 	exports.ox_target:removeGlobalVehicle('mnr_fuel:vehicle:refuel')
 end)
