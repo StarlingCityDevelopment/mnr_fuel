@@ -195,4 +195,12 @@ return {
         debug = GetConvar('environment', 'production') == 'development',
         type = "fv",
     },
+    ["A29"] = { --[[Globe Oil | Rancho]]
+        coords = vec4(450.0, -1973.0, 23.0, 340.0),
+        size = vec3(76.5, 64.0, 21.5),
+        rotation = 0.00,
+        debug = GetConvar('environment', 'production') == 'development',
+        type = "fv",
+    },
 }
+
