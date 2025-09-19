@@ -20,7 +20,7 @@ return {
         offset = vec3(0.41, 0.0, 0.6),
     },
     [`prop_gas_pump_old3`] = {
-        cat = 'fv', 
+        cat = 'fv',
         offset = vec3(-0.41, 0.0, 0.6),
     },
     [`prop_vintage_pump`] = {
