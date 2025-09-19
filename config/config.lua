@@ -1,5 +1,5 @@
 return {
-    fuelPrice = 2,              -- [money/l] price of one liter of fuel
-    jerrycanPrice = 500,        -- [money] price of jerrycan item
-    refuelTime = 2000,          -- [ms/l] time required for refuel animation
+    fuelPrice = 1.0 + math.random(), -- [money/l] price of one liter of fuel
+    jerrycanPrice = 80,              -- [money] price of jerrycan item
+    refuelTime = 500,                -- [ms/l] time required for refuel animation
 }
