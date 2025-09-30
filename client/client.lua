@@ -4,7 +4,7 @@ local pumps = require 'config.pumps'
 local utils = require 'client.utils'
 
 local RopesRegistry = {}
-local NozzleRegistry = 0
+local usedPump = 0
 local refueling = false
 local holding = nil
 
@@ -31,9 +31,7 @@ local function deleteEntities(nozzle)
     DeleteObject(nozzle)
 end
 
-AddStateBagChangeHandler('used', nil, function(bagName, _, value, _, replicated)
-	if not replicated then return end
-
+AddStateBagChangeHandler('used', nil, function(bagName, _, value)
     local entity = GetEntityFromStateBagName(bagName)
     if not DoesEntityExist(entity) then return end
 
@@ -80,8 +78,14 @@ local function takeNozzle(data, cat)
 	if not DoesEntityExist(data.entity) then return end
 	if refueling or holdingItem('nozzle') or holdingItem('jerrycan') then return end
 	if not lib.callback.await('mnr_fuel:server:InStation') then return end
-
 	if Entity(data.entity).state.used then return end
+
+	usedPump = data.entity
+
+	---@description Networking Pump Prop
+	if not NetworkGetEntityIsNetworked(data.entity) then
+		NetworkRegisterEntityAsNetworked(data.entity)
+	end
 
 	lib.requestAnimDict('anim@am_hold_up@male', 300)
 	lib.requestAudioBank('audiodirectory/mnr_fuel')
@@ -93,17 +97,11 @@ local function takeNozzle(data, cat)
 
 	local hand = nozzles[cat].offsets.hand
 	local bone = GetPedBoneIndex(cache.ped, 18905)
-	NozzleRegistry = CreateObject(nozzles[cat].nozzle, 1.0, 1.0, 1.0, true, true, false)
-	NetworkRegisterEntityAsNetworked(NozzleRegistry)
+	local pumpNetId = NetworkGetEntityIsNetworked(data.entity) and NetworkGetNetworkIdFromEntity(data.entity)
+	local nozzleNetId = lib.callback.await('mnr_fuel:server:RequestNozzle', false, cat, pumpNetId) 
+	local nozzle = NetworkGetEntityFromNetworkId(nozzleNetId)
 
-	AttachEntityToEntity(NozzleRegistry, cache.ped, bone, hand[1], hand[2], hand[3], hand[4], hand[5], hand[6], false, true, false, true, 0, true)
-
-	if NetworkGetEntityIsLocal(data.entity) then
-		NetworkRegisterEntityAsNetworked(data.entity)
-	end
-
-	local nozzle = NetworkGetEntityIsNetworked(NozzleRegistry) and NetworkGetNetworkIdFromEntity(NozzleRegistry)
-	Entity(data.entity).state:set('used', nozzle, true)
+	AttachEntityToEntity(nozzle, cache.ped, bone, hand[1], hand[2], hand[3], hand[4], hand[5], hand[6], false, true, false, true, 0, true)
 
 	holding = { item = 'nozzle', cat = cat }
 
@@ -113,12 +111,12 @@ local function takeNozzle(data, cat)
 			local playerCoords = GetEntityCoords(cache.ped)
 			local distance = #(pumpCoords - playerCoords)
 			if distance > 7.5 then
-				Entity(data.entity).state:set('used', nil, true)
 				holding = nil
-				deleteEntities(NozzleRegistry)
+				TriggerServerEvent('mnr_fuel:server:RequestDeletion')
+				Wait(1000)
 				NetworkUnregisterNetworkedEntity(data.entity)
 			end
-			Wait(1000)
+			Wait(500)
 		end
 	end)
 end
@@ -128,11 +126,11 @@ local function returnNozzle(data, cat)
 
 	lib.requestAudioBank('audiodirectory/mnr_fuel')
 	PlaySoundFromEntity(-1, ('mnr_return_%s_nozzle'):format(cat), data.entity, 'mnr_fuel', true, 0)
-
-	Entity(data.entity).state:set('used', nil, true)
 	holding = nil
-	deleteEntities(NozzleRegistry)
+	TriggerServerEvent('mnr_fuel:server:RequestDeletion')
+	Wait(1000)
 	NetworkUnregisterNetworkedEntity(data.entity)
+	usedPump = 0
 end
 
 local function inputDialog(jerrycan, cash, bank, fuel)
@@ -182,12 +180,12 @@ local function playAnim(data)
 	local cat = nozzleCat()
 	local soundId = GetSoundId()
 	lib.requestAudioBank('audiodirectory/mnr_fuel')
-	PlaySoundFromEntity(soundId, ('mnr_%s_start'):format(cat), NozzleRegistry, 'mnr_fuel', true, 0)
+	PlaySoundFromEntity(soundId, ('mnr_%s_start'):format(cat), cache.ped, 'mnr_fuel', true, 0)
 
 	local function stopAnim()
 		StopSound(soundId)
 		ReleaseSoundId(soundId)
-		PlaySoundFromEntity(-1, ('mnr_%s_stop'):format(cat), NozzleRegistry, 'mnr_fuel', true, 0)
+		PlaySoundFromEntity(-1, ('mnr_%s_stop'):format(cat), cache.ped, 'mnr_fuel', true, 0)
 		refueling = false
 		client.Notify(locale('notify.refuel_success'), 'success')
 	end
@@ -290,8 +288,8 @@ local function createTargetData(ev)
     		name = 'mnr_fuel:pump:option_2',
     		icon = 'fas fa-hand',
     		distance = 3.0,
-    		canInteract = function()
-    		    return not refueling and holdingItem('nozzle')
+    		canInteract = function(entity)
+    		    return not refueling and usedPump == entity and holdingItem('nozzle')
     		end,
     		onSelect = function(data)
     		    returnNozzle(data, ev and 'ev' or 'fv')
@@ -331,8 +329,6 @@ end
 AddEventHandler('onResourceStop', function(resourceName)
     local scriptName = cache.resource or GetCurrentResourceName()
     if resourceName ~= scriptName then return end
-
-    deleteEntities(NozzleRegistry)
 
     for ent, rope in pairs(RopesRegistry) do
         if rope and DoesRopeExist(rope) then
