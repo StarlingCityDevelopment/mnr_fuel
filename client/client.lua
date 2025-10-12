@@ -27,10 +27,6 @@ local function rotateOffset(offset, heading)
     return vec3(newX, newY, offset.z)
 end
 
-local function deleteEntities(nozzle)
-    DeleteObject(nozzle)
-end
-
 AddStateBagChangeHandler('used', nil, function(bagName, _, value)
     local entity = GetEntityFromStateBagName(bagName)
     if not DoesEntityExist(entity) then return end
@@ -98,7 +94,7 @@ local function takeNozzle(data, cat)
 	local hand = nozzles[cat].offsets.hand
 	local bone = GetPedBoneIndex(cache.ped, 18905)
 	local pumpNetId = NetworkGetEntityIsNetworked(data.entity) and NetworkGetNetworkIdFromEntity(data.entity)
-	local nozzleNetId = lib.callback.await('mnr_fuel:server:RequestNozzle', false, cat, pumpNetId) 
+	local nozzleNetId = lib.callback.await('mnr_fuel:server:RequestNozzle', false, cat, pumpNetId)
 	local nozzle = NetworkGetEntityFromNetworkId(nozzleNetId)
 
 	AttachEntityToEntity(nozzle, cache.ped, bone, hand[1], hand[2], hand[3], hand[4], hand[5], hand[6], false, true, false, true, 0, true)

@@ -8,7 +8,6 @@ SetFuelConsumptionRateMultiplier(10.0)
 
 local function setFuel(vehState, vehicle, amount, replicate)
     if not DoesEntityExist(vehicle) then return end
-	
 	SetVehicleFuelLevel(vehicle, amount)
 	vehState:set('fuel', amount, replicate)
 end

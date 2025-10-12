@@ -69,7 +69,7 @@ local function setFuel(vehicle, amount)
 	local vehState = Entity(vehicle)?.state
 	local fuelLevel = vehState.fuel
 
-	local fuel = math.min(fuelLevel + amount, 100)
+	local fuel = math.min(fuelLevel + amount, 100.0) + 0.0
 
 	vehState:set('fuel', fuel, true)
 end
@@ -119,6 +119,19 @@ local function jerrycanRefuel(src, vehicle)
 	setFuel(vehicle, requiredFuel)
 end
 
+local function requestDeletion(source)
+    if not NozzlesRegistry[source] or not PumpsRegistry[source] then return end
+
+    local pump = NetworkGetEntityFromNetworkId(PumpsRegistry[source])
+    local nozzle = NetworkGetEntityFromNetworkId(NozzlesRegistry[source])
+
+    Entity(pump).state:set('used', nil, true)
+    DeleteEntity(nozzle)
+
+    PumpsRegistry[source] = nil
+    NozzlesRegistry[source] = nil
+end
+
 RegisterNetEvent('mnr_fuel:server:RefuelVehicle', function(action, netId, data)
 	local src = source
 
@@ -147,7 +160,7 @@ RegisterNetEvent('mnr_fuel:server:JerrycanPurchase', function(method)
 		server.Notify(src, locale('notify.not_enough_money'), 'error')
 		return
 	end
-	
+
 	local weapon = exports.ox_inventory:GetCurrentWeapon(src)
 	if weapon and weapon.name == 'WEAPON_PETROLCAN' then
 		local weapon = exports.ox_inventory:GetCurrentWeapon(src)
@@ -186,7 +199,11 @@ lib.callback.register('mnr_fuel:server:RequestNozzle', function(source, cat, net
 	local pump = NetworkGetEntityFromNetworkId(netId)
 	local coords = GetEntityCoords(pump)
     local entity = CreateObject(nozzles[cat].nozzle, coords.x, coords.y, coords.z - 2.0, true, false, false)
-	Wait(200) 			-- mandatory for entity creation
+	lib.waitFor(function ()
+        if DoesEntityExist(entity) then
+            return true
+        end
+    end)
     local nozzleNetId = NetworkGetNetworkIdFromEntity(entity)
 
 	NozzlesRegistry[playerId] = nozzleNetId
@@ -198,32 +215,14 @@ lib.callback.register('mnr_fuel:server:RequestNozzle', function(source, cat, net
 end)
 
 RegisterNetEvent('mnr_fuel:server:RequestDeletion', function()
-	local playerId = source
-	if inStation(playerId) then return end
-
-	if not NozzlesRegistry[playerId] or not PumpsRegistry[playerId] then return end
-
-	local pump = NetworkGetEntityFromNetworkId(PumpsRegistry[playerId])
-	local nozzle = NetworkGetEntityFromNetworkId(NozzlesRegistry[playerId])
-
-	Entity(pump).state:set('used', nil, true)
-	DeleteEntity(nozzle)
-
-	PumpsRegistry[playerId] = nil
-	NozzlesRegistry[playerId] = nil
+    local playerId = source
+    if not inStation(playerId) then return end
+    requestDeletion(playerId)
 end)
 
 AddEventHandler('playerDropped', function()
-	local playerId = source
-	if not NozzlesRegistry[playerId] or not PumpsRegistry[playerId] then return end
-
-	local pump = NetworkGetEntityFromNetworkId(PumpsRegistry[playerId])
-	local nozzle = NetworkGetEntityFromNetworkId(NozzlesRegistry[playerId])
-
-	Entity(pump).state:set('used', nil, true)
-	DeleteEntity(nozzle)
-
-	NozzlesRegistry[playerId] = nil
+    local playerId = source
+    requestDeletion(playerId)
 end)
 
 AddEventHandler('onResourceStop', function(name)
