@@ -69,7 +69,7 @@ local function setFuel(vehicle, amount)
 	local vehState = Entity(vehicle)?.state
 	local fuelLevel = vehState.fuel
 
-	local fuel = math.min(fuelLevel + amount, 100)
+	local fuel = math.min(fuelLevel + amount, 100.0)
 
 	vehState:set('fuel', fuel, true)
 end
