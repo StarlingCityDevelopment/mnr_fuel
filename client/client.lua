@@ -198,11 +198,11 @@ AddEventHandler('mnr_fuel:client:RefuelVehicle', function(data)
     if not lib.callback.await('mnr_fuel:server:InStation') then return end
     if state.refueling and not state:holdingItem('nozzle') then return end
 
-    local electric = GetIsVehicleElectric(GetEntityModel(vehicle))
-	if (electric and state:nozzleCat() ~= 'ev') or (not electric and state:nozzleCat() ~= 'fv') then
-		framework.Notify(electric and locale('notify_not_fv') or locale('notify_not_ev'), 'error')
-		return
-	end
+    -- local electric = GetIsVehicleElectric(GetEntityModel(vehicle))
+	-- if (electric and state:nozzleCat() ~= 'ev') or (not electric and state:nozzleCat() ~= 'fv') then
+		-- framework.Notify(electric and locale('notify_not_fv') or locale('notify_not_ev'), 'error')
+		-- return
+	-- end
 
     local fuel = math.ceil(vehState.fuel)
 
